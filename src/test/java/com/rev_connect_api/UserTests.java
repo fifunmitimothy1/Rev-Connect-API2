@@ -34,6 +34,25 @@ public class UserTests {
         assertThat(testUser.getUserEmail()).isEqualTo("rengoku@demonslayercorp.net");
         assertThat(testUser.getPassword()).isEqualTo("brightredblade");
         assertThat(testUser.getBusiness()).isFalse();
+    }
 
+    @Test
+    public void testSettersAndGetters() {
+        User testUser = new User();
+        testUser.setUserId("flamehashira");
+        testUser.setFirstName("Kyojuro");
+        testUser.setLastName("Rengoku");
+        testUser.setUserEmail("rengoku@demonslayercorp.net");
+        testUser.setPassword("brightredblade");
+        testUser.setBusiness(false);
+
+        assertThat(testUser).isNotNull();
+        assertThat(testUser).isNotEqualTo(underTest);
+        assertThat(testUser.getUserId()).isEqualTo("flamehashira");
+        assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
+        assertThat(testUser.getLastName()).isEqualTo("Rengoku");
+        assertThat(testUser.getUserEmail()).isEqualTo("rengoku@demonslayercorp.net");
+        assertThat(testUser.getPassword()).isEqualTo("brightredblade");
+        assertThat(testUser.getBusiness()).isFalse();
     }
 }
