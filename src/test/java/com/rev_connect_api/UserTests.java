@@ -9,7 +9,6 @@ import com.rev_connect_api.models.User;
 public class UserTests {
 
     private User underTest = new User(
-            1L,
             "codybonham",
             "Cody",
             "Bonham",
@@ -20,7 +19,6 @@ public class UserTests {
     @Test
     public void testUserCreation() {
         User testUser = new User(
-                2L,
                 "flamehashira",
                 "Kyojuro",
                 "Rengoku",
@@ -30,7 +28,6 @@ public class UserTests {
 
         assertThat(testUser).isNotNull();
         assertThat(testUser).isNotEqualTo(underTest);
-        assertThat(testUser.getId()).isEqualTo(2L);
         assertThat(testUser.getUserId()).isEqualTo("flamehashira");
         assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
         assertThat(testUser.getLastName()).isEqualTo("Rengoku");
