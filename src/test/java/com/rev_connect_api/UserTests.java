@@ -28,7 +28,7 @@ public class UserTests {
 
         assertThat(testUser).isNotNull();
         assertThat(testUser).isNotEqualTo(underTest);
-        assertThat(testUser.getUserId()).isEqualTo("flamehashira");
+        assertThat(testUser.getUserName()).isEqualTo("flamehashira");
         assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
         assertThat(testUser.getLastName()).isEqualTo("Rengoku");
         assertThat(testUser.getUserEmail()).isEqualTo("rengoku@demonslayercorp.net");
@@ -39,7 +39,7 @@ public class UserTests {
     @Test
     public void testSettersAndGetters() {
         User testUser = new User();
-        testUser.setUserId("flamehashira");
+        testUser.setUserName("flamehashira");
         testUser.setFirstName("Kyojuro");
         testUser.setLastName("Rengoku");
         testUser.setUserEmail("rengoku@demonslayercorp.net");
@@ -48,7 +48,7 @@ public class UserTests {
 
         assertThat(testUser).isNotNull();
         assertThat(testUser).isNotEqualTo(underTest);
-        assertThat(testUser.getUserId()).isEqualTo("flamehashira");
+        assertThat(testUser.getUserName()).isEqualTo("flamehashira");
         assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
         assertThat(testUser.getLastName()).isEqualTo("Rengoku");
         assertThat(testUser.getUserEmail()).isEqualTo("rengoku@demonslayercorp.net");
