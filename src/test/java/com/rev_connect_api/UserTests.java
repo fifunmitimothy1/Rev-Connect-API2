@@ -39,6 +39,7 @@ public class UserTests {
     @Test
     public void testSettersAndGetters() {
         User testUser = new User();
+        testUser.setId(5L);
         testUser.setUserName("flamehashira");
         testUser.setFirstName("Kyojuro");
         testUser.setLastName("Rengoku");
@@ -48,6 +49,7 @@ public class UserTests {
 
         assertThat(testUser).isNotNull();
         assertThat(testUser).isNotEqualTo(underTest);
+        assertThat(testUser.getId()).isEqualTo(5L);
         assertThat(testUser.getUserName()).isEqualTo("flamehashira");
         assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
         assertThat(testUser.getLastName()).isEqualTo("Rengoku");
