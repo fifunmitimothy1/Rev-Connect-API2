@@ -2,7 +2,6 @@ package com.rev_connect_api;
 
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.UserRepository;
-import com.rev_connect_api.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ public class UserControllerIntegrationTests {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
 
     @BeforeEach
     void setUp() {
