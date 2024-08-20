@@ -1,7 +1,5 @@
 package com.rev_connect_api.models;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -110,8 +108,7 @@ public class User {
     }
 
     public void setUserPwd(String userPwd) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.userPwd = passwordEncoder.encode(userPwd);
+        this.userPwd = userPwd;
     }
 
 @Override
