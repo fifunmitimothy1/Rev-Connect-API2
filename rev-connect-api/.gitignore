@@ -5,7 +5,7 @@ target/
 !**/src/test/**/target/
 
 ## Attachments
-/rev-connect-api/src/test/java/com/rev_connect_api/**
+/rev-connect-api/src/main/resources/public/attachments/**
 
 ### STS ###
 .apt_generated
