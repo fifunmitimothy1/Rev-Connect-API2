@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.logging.Logger;
 
 import java.util.ArrayList;
@@ -15,8 +16,12 @@ import java.util.List;
 @RestController
 public class CommentController {
     private static final Logger logger = Logger.getLogger(CommentController.class.getName());
+    private final CommentService commentService;
+
     @Autowired
-    private CommentService commentService;
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @GetMapping("/{userId}/post/{postId}/comments")
     @CrossOrigin(origins = "*")

@@ -87,7 +87,7 @@ public class PostController {
 
     @GetMapping("/{id}/media")
     public ResponseEntity<Media> GetMediaByPostId(@PathVariable BigInteger id) {
-        Media media = mediaService.getMediaByPostId(id);
+        Media media = (Media) mediaService.getMediaByPostId(id);
         return ResponseEntity.ok(media);
     }
 }

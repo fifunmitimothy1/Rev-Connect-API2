@@ -11,14 +11,14 @@ public class CommentTest {
     public void testCommentGettersAndSetters() {
         Comment comment = new Comment();
 
-        // Set values
+
         comment.setCommentId(1L);
         comment.setUserId(100L);
         comment.setPostId(10L);
         comment.setText("This is a comment.");
         comment.setTimePosted("2024-08-15 10:00:00 AM");
 
-        // Assert values
+
         assertThat(comment.getCommentId()).isNotNull();
         assertEquals(1L, comment.getCommentId());
         assertEquals(100L, comment.getUserId());

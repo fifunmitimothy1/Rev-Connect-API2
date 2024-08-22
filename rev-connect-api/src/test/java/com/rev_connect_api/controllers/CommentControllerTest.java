@@ -20,7 +20,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the CommentController class.
- *
  * This class contains tests to verify the behavior of the CommentController methods
  * using Mockito to mock dependencies and JUnit for assertions.
  */
@@ -35,7 +34,6 @@ public class CommentControllerTest {
 
     /**
      * Tests the getCommentsForPost method when there are comments for a post.
-     *
      * This test verifies that:
      * - The HTTP status is OK (200).
      * - The response body contains the expected list of CommentResponse objects.
@@ -71,7 +69,6 @@ public class CommentControllerTest {
 
     /**
      * Tests the getCommentsForPost method when no comments are available for the post.
-     *
      * This test verifies that:
      * - The HTTP status is OK (200).
      * - The response body contains an empty list.
@@ -96,7 +93,6 @@ public class CommentControllerTest {
 
     /**
      * Tests the createComment method when creating a comment succeeds.
-     *
      * This test verifies that:
      * - The HTTP status is OK (200).
      * - The response body contains the created comment.
@@ -119,7 +115,6 @@ public class CommentControllerTest {
 
     /**
      * Tests the createComment method when an exception is thrown during comment creation.
-     *
      * This test verifies that:
      * - The HTTP status is BAD_REQUEST (400).
      * - The correct service method is called.

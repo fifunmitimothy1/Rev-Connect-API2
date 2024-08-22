@@ -12,11 +12,13 @@ import java.util.List;
 
 @Service
 public class CommentService {
+  private final CommentRepository commentRepository;
+  private final CommentLikesRepository commentLikesRepository;
   @Autowired
-  private CommentRepository commentRepository;
-
-  @Autowired
-  private CommentLikesRepository commentLikesRepository;
+  public CommentService(CommentRepository commentRepository, CommentLikesRepository commentLikesRepository) {
+    this.commentRepository = commentRepository;
+    this.commentLikesRepository = commentLikesRepository;
+  }
 
   public Comment createComment(Comment comment) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
