@@ -52,7 +52,7 @@ public class NameAndBioTest {
 
     public NameAndBioTest() {
         //User prior to client request
-        initialUser = new User(1L,"user", "","", "Test", "User", false,LocalDateTime.now(),LocalDateTime.now(),Set.of(Role.ROLE_USER));
+        initialUser = new User(1L,"user", "","", "Test", "User", false,LocalDateTime.now(),LocalDateTime.now(),Set.of(Role.ROLE_USER),null,null);
         //Valid change to initialUser
         validUser = new User("user", "","", "John", "Doe", false);
         
@@ -96,7 +96,7 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
         //Send HTTP request
-        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + initialProfile.getId(), HttpMethod.GET, requestEntity,String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + initialProfile.getUser().getUserId(), HttpMethod.GET, requestEntity,String.class);
         
         //Verify response status code
         HttpStatusCode statusCode = response.getStatusCode();

@@ -17,6 +17,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name="users")
 @Data
@@ -61,6 +62,14 @@ public class User {
     @Column(name = "role", nullable = false)
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private Set<User> followers = new HashSet<>();
+
+    @ManyToMany(cascade=CascadeType.ALL, mappedBy="followers")
+    private Set<User> following = new HashSet<>();
+
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -95,6 +104,21 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isBusiness = isBusiness;
+    }
+
+    public User(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.isBusiness = user.getIsBusiness();
+        this.roles = user.getRoles();
+        this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
+        this.followers = user.getFollowers();
+        this.following = user.getFollowing();
     }
 
     @Override
