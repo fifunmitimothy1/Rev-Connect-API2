@@ -3,12 +3,13 @@ package com.rev_connect_api.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "businessprofile")
+@Table(name = "business_profile")
 public class BusinessProfile {
-    
+
     @Column(name = "profile_id")
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -106,6 +107,5 @@ public class BusinessProfile {
     public String toString() {
         return "BusinessProfile [id=" + id + ", user=" + user + ", bioText=" + bioText + "]";
     }
-   
 
 }
