@@ -1,8 +1,10 @@
 package com.rev_connect_api.controllers;
 
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.dto.SponsoredPostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.models.SponsoredPost;
 import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
 import com.rev_connect_api.util.TimestampUtil;
@@ -35,7 +37,7 @@ public class PostController {
     }
 
     // Could not get ModelAttribute working, so I used this solution which is not the best
-    @PostMapping
+    @PostMapping("/regular")
     public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
                                            @RequestParam("content") String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file) {
@@ -43,6 +45,23 @@ public class PostController {
         post.setUserId(new BigInteger("1"));
         post.setCreatedAt(timestampUtil.getCurrentTimestamp());
         Post response;
+        if(file != null) {
+            response = postService.savePost(post, file);
+        } else {
+            response = postService.savePost(post);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sponsored")
+    public ResponseEntity<SponsoredPost> CreateSponsoredPost(@RequestParam("title") String title,
+                                                    @RequestParam("content") String content,
+                                                    @RequestParam(value = "file", required = false) MultipartFile file,
+                                                    @RequestParam("sponsor") String sponsor) {
+        SponsoredPost post = postService.sponsoredpostDtoToPost(new SponsoredPostCreateRequest(title, content, sponsor));
+        post.setUserId(new BigInteger("1"));
+        post.setCreatedAt(timestampUtil.getCurrentTimestamp());
+        SponsoredPost response;
         if(file != null) {
             response = postService.savePost(post, file);
         } else {

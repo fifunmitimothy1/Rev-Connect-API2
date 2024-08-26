@@ -1,9 +1,12 @@
 package com.rev_connect_api.services;
 
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.dto.SponsoredPostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.models.SponsoredPost;
 import com.rev_connect_api.repositories.PostRepository;
+import com.rev_connect_api.repositories.SponsoredPostRepository;
 import com.rev_connect_api.util.TimestampUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -24,11 +27,13 @@ public class PostService {
     private static final int MAX_POST_PER_PAGE = 5;
 
     private final PostRepository postRepository;
+    private final SponsoredPostRepository sponsoredPostRepository;
     private final MediaService mediaService;
     private final TimestampUtil timestampUtil;
 
-    public PostService(PostRepository postRepository, MediaService mediaService, TimestampUtil timestampUtil) {
+    public PostService(PostRepository postRepository, SponsoredPostRepository sponsoredPostRepository, MediaService mediaService, TimestampUtil timestampUtil) {
         this.postRepository = postRepository;
+        this.sponsoredPostRepository = sponsoredPostRepository;
         this.mediaService = mediaService;
         this.timestampUtil = timestampUtil;
     }
@@ -40,7 +45,11 @@ public class PostService {
 
     @Transactional
     public Post savePost(Post post, MultipartFile file) {
-        Post response = postRepository.save(post);
+        Post response;
+        if (post instanceof SponsoredPost) {
+            response = sponsoredPostRepository.save((SponsoredPost)post);
+        }
+        response = postRepository.save(post);
         mediaService.saveMedia(file, response.getPostId(), response.getCreatedAt());
         return response;
     }
@@ -90,6 +99,14 @@ public class PostService {
 
     public Post postDtoToPost(PostCreateRequest postCreateRequest) {
         return Post.builder()
+                .title(postCreateRequest.getTitle())
+                .content(postCreateRequest.getContent())
+                .build();
+    }
+
+    public SponsoredPost sponsoredpostDtoToPost(SponsoredPostCreateRequest postCreateRequest) {
+        return SponsoredPost.builder()
+                .sponsor(postCreateRequest.getContent())
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .build();

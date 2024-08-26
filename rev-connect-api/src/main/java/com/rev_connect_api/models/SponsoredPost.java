@@ -7,16 +7,16 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("2")
 public class SponsoredPost extends Post{
-    private String sponsorName;
+    private String sponsor;
     private List<String> tags;
 
     public SponsoredPost() {
-        sponsorName = "";
+        sponsor = "";
         tags = new ArrayList<>();
     }
 
-    public void setSponsorName(String sponsorName) {
-        this.sponsorName = sponsorName;
+    public void setSponsorName(String sponsor) {
+        this.sponsor = sponsor;
     }
 
     public void addTag(String tag) {
@@ -27,11 +27,37 @@ public class SponsoredPost extends Post{
         tags.remove(tag);
     }
 
-    public String getSponsorName() {
-        return sponsorName;
+    public String getSponsor() {
+        return sponsor;
     }
 
     public List<String> getTags() {
         return new ArrayList<>(tags);
+    }
+
+    private SponsoredPost(Builder builder) {
+        super(builder);
+        sponsor = builder.sponsor;
+    }
+
+    public static Builder spbuilder() {
+        return new Builder();
+    }
+
+    public static final class Builder extends Post.Builder {
+        private String sponsor;
+
+        public Builder() {
+        }
+
+        public Builder sponsor(String val) {
+            sponsor = val;
+            return this;
+        }
+
+        @Override
+        public SponsoredPost build() {
+            return new SponsoredPost(this);
+        }
     }
 }

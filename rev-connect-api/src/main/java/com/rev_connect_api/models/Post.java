@@ -71,7 +71,7 @@ public class Post {
         this.content = content;
     }
 
-    private Post(Builder builder) {
+    protected Post(Builder builder) {
         postId = builder.postId;
         userId = builder.userId;
         createdAt = builder.createdAt;
@@ -85,7 +85,7 @@ public class Post {
     }
 
 
-    public static final class Builder {
+    public static class Builder {
         private BigInteger postId;
         private BigInteger userId;
         private Timestamp createdAt;
@@ -93,7 +93,7 @@ public class Post {
         private String title;
         private String content;
 
-        private Builder() {
+        public Builder() {
         }
 
         public Builder postId(BigInteger val) {

@@ -3,8 +3,10 @@ package com.rev_connect_api;
 
 import com.rev_connect_api.controllers.PostController;
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.dto.SponsoredPostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.models.SponsoredPost;
 import com.rev_connect_api.repositories.MediaRepository;
 import com.rev_connect_api.repositories.PostRepository;
 import com.rev_connect_api.services.MediaService;
@@ -182,6 +184,24 @@ public class PostControllerTest {
         postsResponse = postController.GetRecentPosts(1);
         posts = postsResponse.getBody();
         assertEquals(remainderPostCount, posts.size());
+    }
+
+    @Test
+    @DirtiesContext
+    public void TestCreateSponsoredPost() {
+        final BigInteger id = new BigInteger("1");
+
+        // Create post
+        SponsoredPostCreateRequest postRequest = new SponsoredPostCreateRequest("title", "content", "sponsor");
+        ResponseEntity<SponsoredPost> response = postController.CreateSponsoredPost(postRequest.getTitle(), postRequest.getContent(), null, postRequest.getSponsor());
+        Post postResponse = response.getBody();
+
+        // Verifies that the controller returns a post entity similar to the post request
+        assertEqualsPost(postRequest, postResponse);
+
+        // Verifies that a post id is given to the response, it should be 1 as the entity is auto-generating
+        response = postController.GetPostById(id);
+        assertEquals(id, response.getBody().getPostId());
     }
 
     // Verifies if the request content of post is equal to the post from response body
