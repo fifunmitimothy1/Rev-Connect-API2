@@ -23,6 +23,7 @@ public class Post {
     private Timestamp updatedAt;
     private String title;
     private String content;
+    private boolean isPrivate;
 
     private Post(Builder builder) {
         postId = builder.postId;
@@ -31,6 +32,7 @@ public class Post {
         updatedAt = builder.updatedAt;
         title = builder.title;
         content = builder.content;
+        isPrivate = builder.isPrivate;
     }
 
     public static Builder builder() {
@@ -44,7 +46,7 @@ public class Post {
         private Timestamp updatedAt;
         private String title;
         private String content;
-
+        private boolean isPrivate;
         private Builder() {
         }
 
@@ -75,6 +77,11 @@ public class Post {
 
         public Builder content(String val) {
             content = val;
+            return this;
+        }
+
+        public Builder isPrivate(boolean val){
+            isPrivate = val;
             return this;
         }
 

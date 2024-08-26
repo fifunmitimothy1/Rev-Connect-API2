@@ -33,6 +33,7 @@ CREATE TABLE personal_profiles (
 --     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 --     posted_by BIGINT,
 --     post_text VARCHAR(255),
+--     is_private BOOLEAN NOT NULL DEFAULT false, 
 --     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 --     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 --     FOREIGN KEY (posted_by) REFERENCES users(user_id)
