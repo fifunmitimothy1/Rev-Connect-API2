@@ -19,7 +19,7 @@ import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.services.ProfileService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin("*")
 @RequestMapping("/profile")
 public class ProfileController {
   private ProfileService profileService;
