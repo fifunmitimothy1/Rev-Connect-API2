@@ -1,7 +1,6 @@
 package com.rev_connect_api.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -12,11 +11,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.models.EndorsementLink;
 import com.rev_connect_api.services.EndorsementLinkService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,8 +30,11 @@ public class EndorsementLinkControllerTest {
   private ObjectMapper objectMapper;
 
   /**
-   * This test is for the createEndorsementLink method in the EndorsementLinkController class which creates a new endorsement link.
-   * It tests that the method returns a 200 status code and the endorsement link object with the correct link and linkText.
+   * This test is for the createEndorsementLink method in the
+   * EndorsementLinkController class which creates a new endorsement link.
+   * It tests that the method returns a 200 status code and the endorsement link
+   * object with the correct link and linkText.
+   * 
    * @throws Exception if the test fails
    */
   @Test
@@ -54,8 +52,12 @@ public class EndorsementLinkControllerTest {
   }
 
   /**
-   * This test is for the getEndorsementLinksByUserId method in the EndorsementLinkController class which retrieves all endorsement links for a user.
-   * It tests that the method returns a 200 status code and the endorsement link object with the correct link and linkText.
+   * This test is for the getEndorsementLinksByUserId method in the
+   * EndorsementLinkController class which retrieves all endorsement links for a
+   * user.
+   * It tests that the method returns a 200 status code and the endorsement link
+   * object with the correct link and linkText.
+   * 
    * @throws Exception if the test fails
    */
   @Test
@@ -74,8 +76,11 @@ public class EndorsementLinkControllerTest {
   }
 
   /**
-   * This test is for the updateEndorsementLink method in the EndorsementLinkController class which updates an endorsement link.
-   * It tests that the method returns a 200 status code and the endorsement link object with the correct link and linkText.
+   * This test is for the updateEndorsementLink method in the
+   * EndorsementLinkController class which updates an endorsement link.
+   * It tests that the method returns a 200 status code and the endorsement link
+   * object with the correct link and linkText.
+   * 
    * @throws Exception if the test fails
    */
   @Test
@@ -98,8 +103,10 @@ public class EndorsementLinkControllerTest {
   }
 
   /**
-   * This test is for the deleteEndorsementLink method in the EndorsementLinkController class which deletes an endorsement link.
+   * This test is for the deleteEndorsementLink method in the
+   * EndorsementLinkController class which deletes an endorsement link.
    * It tests that the method returns a 204 status code.
+   * 
    * @throws Exception if the test fails
    */
   @Test

@@ -8,20 +8,14 @@ import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
 import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -38,11 +32,12 @@ public class PostController {
         this.mediaService = mediaService;
     }
 
-    // Could not get ModelAttribute working, so I used this solution which is not the best
+    // Could not get ModelAttribute working, so I used this solution which is not
+    // the best
     @PostMapping
     public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
-                                           @RequestParam("content") String content,
-                                           @RequestParam(value = "file", required = false) MultipartFile file) {
+            @RequestParam("content") String content,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
         Principal principal = (Principal) auth.getPrincipal();
@@ -52,7 +47,7 @@ public class PostController {
         post.setCreatedAt(timestampUtil.getCurrentTimestamp());
 
         Post response;
-        if(file != null) {
+        if (file != null) {
             response = postService.savePost(post, file);
         } else {
             response = postService.savePost(post);
@@ -74,10 +69,9 @@ public class PostController {
 
     @GetMapping("/media/{postId}")
     public ResponseEntity<List<Media>> getMediaByPostId(@PathVariable BigInteger postId) {
-    List<Media> mediaList =  mediaService.getMediaByPostId(postId);
-    return ResponseEntity.ok(mediaList);
+        List<Media> mediaList = mediaService.getMediaByPostId(postId);
+        return ResponseEntity.ok(mediaList);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> DeletePostById(@PathVariable BigInteger id) {
@@ -87,7 +81,7 @@ public class PostController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Post> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
-                                               @PathVariable BigInteger id) {
+            @PathVariable BigInteger id) {
         Post post = postService.postDtoToPost(postCreateRequest);
         post.setPostId(id);
         post = postService.updatePost(post);

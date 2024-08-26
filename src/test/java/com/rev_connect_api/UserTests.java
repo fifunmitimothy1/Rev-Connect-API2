@@ -4,11 +4,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.rev_connect_api.models.BusinessProfile;
 import com.rev_connect_api.models.User;
 
 public class UserTests {
-
 
     private User underTest = new User(
             "codybonham",
@@ -33,9 +31,9 @@ public class UserTests {
         assertThat(testUser.getUsername()).isEqualTo("flamehashira");
         assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
         assertThat(testUser.getLastName()).isEqualTo("Rengoku");
-        assertThat(testUser.getUserEmail()).isEqualTo("rengoku@demonslayercorp.net");
+        assertThat(testUser.getEmail()).isEqualTo("rengoku@demonslayercorp.net");
         assertThat(testUser.getPassword()).isEqualTo("brightredblade");
-        assertThat(testUser.getBusiness()).isFalse();
+        assertThat(testUser.getIsBusiness()).isFalse();
     }
 
     @Test
@@ -44,17 +42,17 @@ public class UserTests {
         testUser.setUsername("flamehashira");
         testUser.setFirstName("Kyojuro");
         testUser.setLastName("Rengoku");
-        testUser.setUserEmail("rengoku@demonslayercorp.net");
+        testUser.setEmail("rengoku@demonslayercorp.net");
         testUser.setPassword("brightredblade");
-        testUser.setBusiness(false);
+        testUser.setIsBusiness(false);
 
         assertThat(testUser).isNotNull();
         assertThat(testUser).isNotEqualTo(underTest);
         assertThat(testUser.getUsername()).isEqualTo("flamehashira");
         assertThat(testUser.getFirstName()).isEqualTo("Kyojuro");
         assertThat(testUser.getLastName()).isEqualTo("Rengoku");
-        assertThat(testUser.getUserEmail()).isEqualTo("rengoku@demonslayercorp.net");
+        assertThat(testUser.getEmail()).isEqualTo("rengoku@demonslayercorp.net");
         assertThat(testUser.getPassword()).isEqualTo("brightredblade");
-        assertThat(testUser.getBusiness()).isFalse();
+        assertThat(testUser.getIsBusiness()).isFalse();
     }
 }

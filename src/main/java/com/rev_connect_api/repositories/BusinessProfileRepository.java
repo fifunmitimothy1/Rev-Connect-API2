@@ -19,7 +19,7 @@ public interface BusinessProfileRepository extends JpaRepository<BusinessProfile
      * @param userId
      * @return BusinessProfile for that userId
      */
-    BusinessProfile findByUserId(long userId);
+    BusinessProfile findByUserUserId(long userId);
 
     /**
      * Custom query to join user and business profile to get all profile information

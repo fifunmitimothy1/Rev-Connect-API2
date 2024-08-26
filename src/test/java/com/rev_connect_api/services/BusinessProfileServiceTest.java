@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -21,9 +20,11 @@ import java.util.*;
 @ExtendWith(MockitoExtension.class)
 public class BusinessProfileServiceTest {
 
-    @Mock private BusinessProfileRepository businessProfileRepository;
-    @InjectMocks private BusinessProfileService underTest;
-    
+    @Mock
+    private BusinessProfileRepository businessProfileRepository;
+    @InjectMocks
+    private BusinessProfileService underTest;
+
     /**
      * Test for successfully finding a profile by user id
      */
@@ -31,10 +32,12 @@ public class BusinessProfileServiceTest {
     public void findByUserIdFound() {
         final BusinessProfile expected = BusinessProfileTestDataUtil.createTestProfileA();
 
-        when(businessProfileRepository.findByUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getId()))
-            .thenReturn(BusinessProfileTestDataUtil.createTestProfileA());
+        when(businessProfileRepository
+                .findByUserUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getUserId()))
+                .thenReturn(BusinessProfileTestDataUtil.createTestProfileA());
 
-        final BusinessProfile result = underTest.findByUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getId());
+        final BusinessProfile result = underTest
+                .findByUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getUserId());
         assertThat(result).isNotNull().hasToString(expected.toString());
     }
 
@@ -45,10 +48,12 @@ public class BusinessProfileServiceTest {
     public void findByUserIdNotFound() {
         final BusinessProfile expected = null;
 
-        when(businessProfileRepository.findByUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getId()))
-            .thenReturn(null);
+        when(businessProfileRepository
+                .findByUserUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getUserId()))
+                .thenReturn(null);
 
-        final BusinessProfile result = underTest.findByUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getId());
+        final BusinessProfile result = underTest
+                .findByUserId(BusinessProfileTestDataUtil.createTestProfileA().getUser().getUserId());
         assertThat(result).isEqualTo(expected);
     }
 
@@ -57,15 +62,13 @@ public class BusinessProfileServiceTest {
      */
     @Test
     public void findAllBusinessProfilesReturnsAListWhenPresent() {
-        final List<BusinessProfile> profileList = 
-            List.of(
+        final List<BusinessProfile> profileList = List.of(
                 BusinessProfileTestDataUtil.createTestProfileA(),
                 BusinessProfileTestDataUtil.createTestProfileB(),
-                BusinessProfileTestDataUtil.createTestProfileC()
-            );
+                BusinessProfileTestDataUtil.createTestProfileC());
         when(businessProfileRepository.findAll()).thenReturn(profileList);
         assertThat(underTest.findAllBusinessProfiles())
-            .isNotEmpty();
+                .isNotEmpty();
     }
 
     /**
@@ -73,12 +76,11 @@ public class BusinessProfileServiceTest {
      */
     @Test
     public void findAllBusinessProfilesReturnsEmptyListIfNone() {
-        final List<BusinessProfile> profileList = 
-            List.of();
+        final List<BusinessProfile> profileList = List.of();
         when(businessProfileRepository.findAll()).thenReturn(profileList);
         assertThat(underTest.findAllBusinessProfiles())
-            .isNotNull()
-            .isEmpty();
+                .isNotNull()
+                .isEmpty();
     }
 
     /**
@@ -90,11 +92,11 @@ public class BusinessProfileServiceTest {
         String bioText = "Updated bio text";
         BusinessProfile businessProfile = BusinessProfileTestDataUtil.createTestProfileA();
         businessProfile.setBioText(bioText);
-        
+
         BusinessProfile existingProfile = new BusinessProfile();
         existingProfile.setBioText("Old bio text");
-        
-        when(businessProfileRepository.findByUserId(userId)).thenReturn(existingProfile);
+
+        when(businessProfileRepository.findByUserUserId(userId)).thenReturn(existingProfile);
         Map<String, Object> updatedProfileInfo = new HashMap<>();
         updatedProfileInfo.put("bioText", bioText);
         when(businessProfileRepository.findAllProfileInfoByUserId(userId)).thenReturn(updatedProfileInfo);
@@ -120,26 +122,27 @@ public class BusinessProfileServiceTest {
 
         assertEquals("Exceeding 500 character limit", thrown.getMessage());
     }
-    
+
     /**
      * Testing getting all profile information for a given user successfully
      */
     @Test
     public void findFullProfileByUserIdFound() {
         final Map<String, Object> myMap = new HashMap<>();
-       myMap.put("EMAIL", "test2@email"); 
-       myMap.put("LASTNAME", "doe2");
-       myMap.put("PROFILE_ID", 998);
-       myMap.put("FIRSTNAME", "joe2");
-       myMap.put("USER_ID", 112);
-       myMap.put("USERNAME", "test2");
-       myMap.put("IS_BUSINESS", true);
-       myMap.put("BIO_TEXT", "Test Bio 2");
+        myMap.put("EMAIL", "test2@email");
+        myMap.put("LASTNAME", "doe2");
+        myMap.put("PROFILE_ID", 998);
+        myMap.put("FIRSTNAME", "joe2");
+        myMap.put("USER_ID", 112);
+        myMap.put("USERNAME", "test2");
+        myMap.put("IS_BUSINESS", true);
+        myMap.put("BIO_TEXT", "Test Bio 2");
 
         when(businessProfileRepository.findAllProfileInfoByUserId(112))
-            .thenReturn(myMap);
+                .thenReturn(myMap);
         final Map<String, Object> result = underTest.findAllProfileInfoByUserId(112);
-        assertThat(result).isNotEmpty().hasFieldOrProperty("EMAIL").hasFieldOrProperty("LASTNAME").hasFieldOrPropertyWithValue("USER_ID", 112);
+        assertThat(result).isNotEmpty().hasFieldOrProperty("EMAIL").hasFieldOrProperty("LASTNAME")
+                .hasFieldOrPropertyWithValue("USER_ID", 112);
     }
 
     /**
@@ -149,10 +152,9 @@ public class BusinessProfileServiceTest {
     public void findFullProfileByUserIdNotFound() {
         final Map<String, Object> myMap = new HashMap<>();
         when(businessProfileRepository.findAllProfileInfoByUserId(10))
-        .thenReturn(myMap);
+                .thenReturn(myMap);
         final Map<String, Object> result = underTest.findAllProfileInfoByUserId(10);
         assertThat(result).isEmpty();
     }
-
 
 }

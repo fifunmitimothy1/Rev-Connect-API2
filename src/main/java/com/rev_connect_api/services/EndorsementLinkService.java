@@ -13,7 +13,8 @@ import com.rev_connect_api.repositories.EndorsementLinkRepository;
 import jakarta.transaction.Transactional;
 
 /**
- * This class is a service for the EndorsementLink model. It contains methods for creating, reading, updating, and deleting endorsement links.
+ * This class is a service for the EndorsementLink model. It contains methods
+ * for creating, reading, updating, and deleting endorsement links.
  */
 @Service
 @Transactional
@@ -47,8 +48,8 @@ public class EndorsementLinkService {
      * 
      * @param businessUserId The user id of the user to check
      */
-    private void userExists(Long businessUserId){
-        BusinessProfile businessProfile = businessProfileRepository.findByUserId(businessUserId);
+    private void userExists(Long businessUserId) {
+        BusinessProfile businessProfile = businessProfileRepository.findByUserUserId(businessUserId);
 
         if (businessProfile == null) {
             throw new IllegalArgumentException("User does not have a business profile: " + businessUserId);
@@ -61,7 +62,7 @@ public class EndorsementLinkService {
      * @param id The id of the endorsement link to retrieve
      * @return The endorsement link with the given id
      */
-    private EndorsementLink retrieveEndorsementLink(Long id){
+    private EndorsementLink retrieveEndorsementLink(Long id) {
         EndorsementLink endorsementLink = endorsementLinkRepository.findById(id).orElse(null);
 
         if (endorsementLink == null) {
@@ -73,9 +74,10 @@ public class EndorsementLinkService {
     /**
      * This method creates an endorsement link in the database
      * 
-     * @param businessUserId The user id of the user who created the endorsement link
-     * @param link The URL of the endorsement link
-     * @param link_text The link_text of the endorsement link
+     * @param businessUserId The user id of the user who created the endorsement
+     *                       link
+     * @param link           The URL of the endorsement link
+     * @param link_text      The link_text of the endorsement link
      * @return The endorsement link that was created
      */
     public EndorsementLink createEndorsementLink(Long businessUserId, String link, String link_text) {
@@ -88,7 +90,8 @@ public class EndorsementLinkService {
     /**
      * This method retrieves all endorsement links for a user from the database
      * 
-     * @param businessUserId The user id of the user to retrieve endorsement links for
+     * @param businessUserId The user id of the user to retrieve endorsement links
+     *                       for
      * @return A list of endorsement links for the user
      */
     public List<EndorsementLink> getEndorsementLinksByUserId(Long businessUserId) {
@@ -99,10 +102,11 @@ public class EndorsementLinkService {
     /**
      * This method updates an endorsement link in the database
      * 
-     * @param id The id of the endorsement link to update
-     * @param businessUserId The user id of the user who created the endorsement link
-     * @param link The URL of the endorsement link
-     * @param link_text The link_text of the endorsement link
+     * @param id             The id of the endorsement link to update
+     * @param businessUserId The user id of the user who created the endorsement
+     *                       link
+     * @param link           The URL of the endorsement link
+     * @param link_text      The link_text of the endorsement link
      * @return The endorsement link that was updated
      */
     public EndorsementLink updateEndorsementLink(Long id, Long businessUserId, String link, String link_text) {

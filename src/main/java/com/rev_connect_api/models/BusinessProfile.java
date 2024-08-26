@@ -12,7 +12,7 @@ public class BusinessProfile {
     private long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     @Column(name = "bio_text", columnDefinition = "VARCHAR(MAX)")
