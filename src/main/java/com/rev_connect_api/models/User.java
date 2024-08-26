@@ -1,144 +1,135 @@
 package com.rev_connect_api.models;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties.Build;
-import org.springframework.context.annotation.Profile;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+	@SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
+	@Column(name = "user_id")
+	private Long userId;
 
-	@Column(name = "username")
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 
-	@Column(name = "first_name")
-	private String firstName;
-
-	@Column(name = "last_name")
-	private String lastName;
-
-	@Column(name = "email")
-	private String userEmail;
-
-	@Column(name = "password")
+	@Column(name = "user_password", nullable = false)
 	private String password;
 
-	@Column(name = "is_business")
+	@Column(name = "email", unique = true, nullable = false)
+	private String email;
+
+	@Column(name = "first_name", nullable = false)
+	private String firstName;
+
+	@Column(name = "last_name", nullable = false)
+	private String lastName;
+
+	@Column(name = "is_business", nullable = false)
 	private Boolean isBusiness;
 
-	@OneToOne(mappedBy = "user")
-    private BusinessProfile businessProfile;
+	@CreatedDate
+	@Column(name = "created_at", updatable = false, nullable = false)
+	private LocalDateTime createdAt;
 
+	@LastModifiedDate
+	@Column(name = "updated_at", updatable = true, nullable = false)
+	private LocalDateTime updatedAt;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role", nullable = false)
+	private Set<Role> roles = new HashSet<>();
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
 
-	public User(){}
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
-	public User(String username, String firstName, String lastName,String userEmail,String password,Boolean isBusiness) {
+	@PrePersist
+	protected void onCreate() {
+		createdAt = LocalDateTime.now();
+		updatedAt = createdAt;
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		updatedAt = LocalDateTime.now();
+	}
+
+	@JsonIgnore
+	public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+		return roles.stream()
+				.map((role) -> new SimpleGrantedAuthority(role.name()))
+				.collect(Collectors.toSet());
+	}
+
+	public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
 		this.username = username;
+		this.password = password;
+		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.userEmail = userEmail;
-		this.password = password;
 		this.isBusiness = isBusiness;
-	}
-
-	public User(long id, String username, String firstName, String lastName,String userEmail,String password,Boolean isBusiness) {
-		this.id = id;
-		this.username = username;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.userEmail = userEmail;
-		this.password = password;
-		this.isBusiness = isBusiness;
-	}
-
-	public User(Long id, String username, String firstName, String lastName, String userEmail, String password,
-			Boolean isBusiness, BusinessProfile businessProfile) {
-		this.id = id;
-		this.username = username;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.userEmail = userEmail;
-		this.password = password;
-		this.isBusiness = isBusiness;
-		this.businessProfile = businessProfile;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Boolean getBusiness() {
-		return isBusiness;
-	}
-
-	public void setBusiness(Boolean business) {
-		isBusiness = business;
-	}
-
-	public BusinessProfile getBusinessProfile() {
-		return businessProfile;
-	}
-
-	public void setProfile(BusinessProfile businessProfile) {
-		this.businessProfile = businessProfile;
 	}
 
 	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", userEmail=" + userEmail + ", password=" + password + ", isBusiness=" + isBusiness + "]";
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		User user = (User) obj;
+		return Objects.equals(userId, user.userId) &&
+				Objects.equals(username, user.username) && Objects.equals(email, user.email);
 	}
 
-	
+	@Override
+	public int hashCode() {
+		return Objects.hash(userId, username, email);
+	}
+
+	/**
+	 * Overriding the default toString() method allows for easy debugging.
+	 * 
+	 * @return a String representation of this class.
+	 */
+	@Override
+	public String toString() {
+		return "User{" +
+				"userId=" + userId +
+				", username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", isBusiness=" + isBusiness +
+				", createdAt=" + createdAt +
+				", updatedAt=" + updatedAt +
+				", roles=" + roles +
+				'}';
+	}
 }
