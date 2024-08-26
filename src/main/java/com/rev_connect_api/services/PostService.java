@@ -6,6 +6,8 @@ import com.rev_connect_api.models.Post;
 import com.rev_connect_api.repositories.PostRepository;
 import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.transaction.Transactional;
+
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,6 +58,12 @@ public class PostService {
     public List<Post> getRecentPosts(int page) {
         Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE);
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return posts;
+    }
+
+    public List<Post> getRecentPostsByTag(int page, String tag) {
+        Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE, Sort.by("createdAt").descending());
+        List<Post> posts = postRepository.findAllByTag(tag, pageable);
         return posts;
     }
 

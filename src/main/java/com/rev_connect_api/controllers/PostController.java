@@ -72,6 +72,12 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<Post>> GetPostsFilterByTag(@RequestParam int page, @RequestParam String tag) {
+        List<Post> posts = postService.getRecentPostsByTag(page, tag);
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/media/{postId}")
     public ResponseEntity<List<Media>> getMediaByPostId(@PathVariable BigInteger postId) {
     List<Media> mediaList =  mediaService.getMediaByPostId(postId);
