@@ -17,11 +17,17 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "post_id")
     private BigInteger postId;
+    @Column(name ="posted_by")
     private BigInteger userId;
+    @Column(name = "created_at")
     private Timestamp createdAt;
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
+    @Column(name = "title")
     private String title;
+    @Column(name = "content")
     private String content;
 
     private Post(Builder builder) {

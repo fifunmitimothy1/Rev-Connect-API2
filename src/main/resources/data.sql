@@ -1,7 +1,7 @@
 drop table if exists user_roles;
 drop table if exists users cascade;
 drop table if exists personal_profiles;
--- drop table if exists post;
+drop table if exists posts;
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -29,14 +29,15 @@ CREATE TABLE personal_profiles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- CREATE TABLE post (
---     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
---     posted_by BIGINT,
---     post_text VARCHAR(255),
---     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     FOREIGN KEY (posted_by) REFERENCES users(user_id)
--- );
+CREATE TABLE posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    posted_by BIGINT,
+    title VARCHAR(255),
+    content VARCHAR(255),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (posted_by) REFERENCES users(user_id)
+);
 
 -- Insert users
 -- passwords are hashed from "hashed_password"
@@ -63,12 +64,12 @@ VALUES
 (3, 'TestBio3!'),
 (4, 'TestBio4!');
 
--- -- Insert posts
--- INSERT INTO post (posted_by, post_text, created_at, updated_at)
--- VALUES
--- (1, 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- Insert posts
+INSERT INTO posts (posted_by, title,  content, created_at, updated_at)
+VALUES
+(1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 

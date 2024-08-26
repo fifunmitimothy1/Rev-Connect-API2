@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
 
     private final TimestampUtil timestampUtil;
@@ -66,7 +66,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<List<Post>> GetRecentPosts(@RequestParam int page) {
         List<Post> posts = postService.getRecentPosts(page);
         return ResponseEntity.ok(posts);
