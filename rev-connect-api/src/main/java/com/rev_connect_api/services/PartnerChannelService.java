@@ -1,5 +1,6 @@
 package com.rev_connect_api.services;
 
+import com.rev_connect_api.exceptions.ResourceNotFoundException;
 import com.rev_connect_api.models.PartnerChannel;
 import com.rev_connect_api.repositories.PartnerChannelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class PartnerChannelService {
 
   public List<PartnerChannel> getPartnerChannelsByBusinessUserId(Long businessUserId) {
     return partnerChannelRepository.findByBusinessUserId(businessUserId);
+  }
+
+  public PartnerChannel getPartnerChannelById(Long id) {
+    return partnerChannelRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("PartnerChannel not found with id: " + id));
   }
 
   public PartnerChannel updatePartnerChannel(Long id, Long businessUserId, String name, String url) {

@@ -61,4 +61,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleJsonMappingException(JsonMappingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    /**
+     * Handles ResourceNotFoundExceptions thrown by the application.
+     *
+     * @param e the exception
+     * @return a response entity with the exception message and a status of 404 Not
+     *         Found
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }
