@@ -1,6 +1,7 @@
 drop table if exists user_roles;
 drop table if exists users cascade;
 drop table if exists personal_profiles;
+DROP TABLE IF EXISTS connection_requests;
 -- drop table if exists post;
 
 CREATE TABLE users (
@@ -40,12 +41,12 @@ CREATE TABLE personal_profiles (
 
 -- Insert users
 -- passwords are hashed from "hashed_password"
-INSERT INTO users (username, user_password, email, first_name, last_name, is_business, created_at, updated_at)
+INSERT INTO users (user_id,username, user_password, email, first_name, last_name, is_business, created_at, updated_at)
 VALUES
-('testuser1', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test1@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('testuser2', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test2@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('testuser3', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test3@mail.com', 'test', 'tester', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('testuser4', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test4@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(1,'testuser1', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test1@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2,'testuser2', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test2@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(3,'testuser3', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test3@mail.com', 'test', 'tester', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4,'testuser4', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test4@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Assign roles to users
 INSERT INTO user_roles (user_id, role)
@@ -70,5 +71,27 @@ VALUES
 -- (1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 -- (2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 -- (1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+-- connection table
+
+CREATE TABLE connection_requests (
+    connection_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    requester_id BIGINT NOT NULL,
+    recipient_id BIGINT NOT NULL,
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (requester_id) REFERENCES users(user_id),
+    FOREIGN KEY (recipient_id) REFERENCES users(user_id)
+);
+
+-- Insert sample data into connection_requests
+INSERT INTO connection_requests (requester_id, recipient_id, status) VALUES
+(1, 2, 'PENDING'),    
+(3, 4, 'ACCEPTED'),
+(4, 2, 'ACCEPTED'),
+(3, 1, 'PENDING'),
+
 
 

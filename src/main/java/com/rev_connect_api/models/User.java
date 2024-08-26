@@ -2,6 +2,7 @@ package com.rev_connect_api.models;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rev_connect_api.entity.ConnectionRequest;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -54,6 +56,14 @@ public class User {
     @LastModifiedDate
     @Column(name = "updated_at", updatable = true, nullable = false)
     private LocalDateTime updatedAt;
+
+     @OneToMany(mappedBy = "requester")
+    @JsonIgnore
+    private List<ConnectionRequest> sentRequests;
+
+    @OneToMany(mappedBy = "recipient")
+    @JsonIgnore
+    private List<ConnectionRequest> receivedRequests;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -129,4 +139,20 @@ public class User {
                 ", roles=" + roles +
                 '}';
     }
+    public List<ConnectionRequest> getSentRequests() {
+        return sentRequests;
+    }
+
+    public void setSentRequests(List<ConnectionRequest> sentRequests) {
+        this.sentRequests = sentRequests;
+    }
+
+    public List<ConnectionRequest> getReceivedRequests() {
+        return receivedRequests;
+    }
+
+    public void setReceivedRequests(List<ConnectionRequest> receivedRequests) {
+        this.receivedRequests = receivedRequests;
+    }
 }
+
