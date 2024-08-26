@@ -26,7 +26,7 @@ public class PartnerChannelControllerTest {
     mockMvc.perform(post("/api/partner_channels")
         .contentType(MediaType.APPLICATION_JSON)
         .content(newChannelJson))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.name").value("New Channel"))
         .andExpect(jsonPath("$.url").value("https://newchannel.com"));
   }

@@ -1,5 +1,6 @@
 package com.rev_connect_api.services;
 
+import com.rev_connect_api.exceptions.ResourceNotFoundException;
 import com.rev_connect_api.models.PartnerChannel;
 import com.rev_connect_api.repositories.PartnerChannelRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class PartnerChannelServiceTest {
@@ -59,5 +62,27 @@ public class PartnerChannelServiceTest {
         partnerChannelService.deletePartnerChannel(1L);
 
         verify(partnerChannelRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void testGetPartnerChannelById_Success() {
+        PartnerChannel channel = new PartnerChannel(111L, "Test Channel", "https://test.com");
+        channel.setId(4L);
+
+        when(partnerChannelRepository.findById(4L)).thenReturn(Optional.of(channel));
+
+        PartnerChannel foundChannel = partnerChannelService.getPartnerChannelById(4L);
+
+        assertEquals("Test Channel", foundChannel.getName());
+        assertEquals("https://test.com", foundChannel.getUrl());
+    }
+
+    @Test
+    public void testGetPartnerChannelById_NotFound() {
+        when(partnerChannelRepository.findById(4L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            partnerChannelService.getPartnerChannelById(4L);
+        });
     }
 }
