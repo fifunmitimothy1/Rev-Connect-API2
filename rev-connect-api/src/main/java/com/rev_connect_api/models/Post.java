@@ -7,6 +7,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "posts")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="post type", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorValue("1")
 public class Post {
 
     @Id
