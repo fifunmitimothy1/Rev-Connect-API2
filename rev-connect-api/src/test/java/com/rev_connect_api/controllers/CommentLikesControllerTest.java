@@ -74,7 +74,7 @@ public class CommentLikesControllerTest {
      * Tests the likeComment method when the comment does not exist.
      *
      * This test verifies that:
-     * - The HTTP status is BAD_REQUEST (400).
+     * - The HTTP status is NOT FOUND (404).
      * - No interactions with the CommentLikesService occur if the comment is not found.
      */
     @Test
@@ -87,7 +87,7 @@ public class CommentLikesControllerTest {
 
         ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         verify(commentService).doesCommentExist(commentId);
         verifyNoInteractions(commentLikesService);

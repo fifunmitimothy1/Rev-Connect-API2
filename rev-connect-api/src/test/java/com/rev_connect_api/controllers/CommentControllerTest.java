@@ -43,7 +43,7 @@ public class CommentControllerTest {
     @Test
     public void testGetAllCommentForPost() {
         long userId = 1L;
-        long postId = 2L;
+        Long postId = 2L;
 
         Comment comment1 = new Comment();
         comment1.setCommentId(1L);
@@ -54,7 +54,7 @@ public class CommentControllerTest {
         when(commentService.getLikesCountForComment(1L)).thenReturn(10L);
         when(commentService.getLikesCountForComment(2L)).thenReturn(5L);
 
-        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(userId, postId);
+        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId,userId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<CommentResponse> body = response.getBody();
@@ -81,7 +81,7 @@ public class CommentControllerTest {
 
         when(commentService.getCommentForPost(userId, postId)).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(userId, postId);
+        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId,userId);
 
         List<CommentResponse> body = response.getBody();
         assert body != null;
@@ -107,7 +107,7 @@ public class CommentControllerTest {
 
         ResponseEntity<Comment> response = commentController.createComment(comment);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(comment, response.getBody());
 
         verify(commentService).createComment(comment);
