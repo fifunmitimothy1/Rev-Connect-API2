@@ -29,7 +29,7 @@ public class CommentLikesTest {
 
     @Test
     public void testCommentLikesConstructor() {
-        CommentLikes commentLikes = new CommentLikes(100L, 10L, LocalDateTime.now());
+        CommentLikes commentLikes = new CommentLikes(10L, 100L, LocalDateTime.now());
 
         assertEquals(100L, commentLikes.getUserId());
         assertEquals(10L, commentLikes.getCommentId());
