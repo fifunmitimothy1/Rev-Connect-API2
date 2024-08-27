@@ -18,8 +18,8 @@ public class Media {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private BigInteger mediaId;
-    private BigInteger postId;
+    private Long mediaId;
+    private Long postId;
     private String mediaUrl;
     @Enumerated(EnumType.STRING)
     private MediaType mediaType;
@@ -38,8 +38,8 @@ public class Media {
     }
 
     public static final class Builder {
-        private BigInteger mediaId;
-        private BigInteger postId;
+        private Long mediaId;
+        private Long postId;
         private String mediaUrl;
         private MediaType mediaType;
         private LocalDateTime createdAt;
@@ -47,12 +47,12 @@ public class Media {
         private Builder() {
         }
 
-        public Builder mediaId(BigInteger val) {
+        public Builder mediaId(Long val) {
             mediaId = val;
             return this;
         }
 
-        public Builder postId(BigInteger val) {
+        public Builder postId(Long val) {
             postId = val;
             return this;
         }

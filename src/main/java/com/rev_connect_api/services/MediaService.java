@@ -14,9 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
@@ -34,7 +32,7 @@ public class MediaService {
 
     // The method to save the actual Media entity to database
     @Transactional
-    public Media saveMedia(MultipartFile file, BigInteger postId, LocalDateTime createdAt) {
+    public Media saveMedia(MultipartFile file, Long postId, LocalDateTime createdAt) {
         String path;
         try {
             path = saveFile(file);
@@ -51,12 +49,12 @@ public class MediaService {
         return mediaRepository.save(media);
     }
 
-    public List<Media> getMediaByPostId(BigInteger postId) {
+    public List<Media> getMediaByPostId(Long postId) {
         return mediaRepository.findAllByPostId(postId);
     }
 
     @Transactional
-    public boolean deleteMediaByPostId(BigInteger postId) {
+    public boolean deleteMediaByPostId(Long postId) {
     List<Media> mediaList = getMediaByPostId(postId);
     if (mediaList == null || mediaList.isEmpty()) {
         return false;
