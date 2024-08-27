@@ -39,7 +39,7 @@ public class PostController {
     public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
                                            @RequestParam("content") String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file,
-                                           @RequestParam(value = "isPinned") Boolean isPinned)  /*still have to set default value to false */ { 
+                                           @RequestParam(value = "isPinned", required = false, defaultValue = "false") Boolean isPinned)  /*still have to set default value to false */ { 
         Post post = postService.postDtoToPost(new PostCreateRequest(title, content, isPinned));
         post.setUserId(new BigInteger("1"));
         post.setCreatedAt(timestampUtil.getCurrentTimestamp());
