@@ -1,5 +1,8 @@
 package com.rev_connect_api.services;
 
+import com.rev_connect_api.dto.PostRequestDTO;
+import com.rev_connect_api.dto.PostResponseDTO;
+import com.rev_connect_api.mapper.PostMapper;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.repositories.PostRepository;
 import com.rev_connect_api.utils.TimestampUtil;
@@ -12,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -20,37 +24,47 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MediaService mediaService;
+    private final PostMapper postMapper;
     
-    public PostService(PostRepository postRepository, MediaService mediaService) {
+    public PostService(PostRepository postRepository, MediaService mediaService, PostMapper postMapper) {
         this.postRepository = postRepository;
         this.mediaService = mediaService;
+        this.postMapper = postMapper;
     }
 
-    public Post getPostById(Long id) {
-        return postRepository.findById(id)
+    public PostResponseDTO getPostById(Long id) {
+        Post post = postRepository.findById(id)
             .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
+        return postMapper.toPostResponseDTO(post);
     }
 
-    public List<Post> getPostsByAuthorId(Long authorId) {
-        return postRepository.findByAuthorId(authorId);
+    public List<PostResponseDTO> getPostsByAuthorId(Long authorId) {
+        return postRepository.findByAuthorId(authorId).stream()
+            .map(postMapper::toPostResponseDTO)
+            .collect(Collectors.toList());
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostResponseDTO> getAllPosts() {
+        return postRepository.findAll().stream()
+            .map(postMapper::toPostResponseDTO)
+            .collect(Collectors.toList());
     }
 
-    public Post savePost(Post post) {
-        return postRepository.saveAndFlush(post);
+    public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {
+        Post post = postMapper.toPostEntity(postRequestDTO);
+        Post savedPost = postRepository.saveAndFlush(post);
+        return postMapper.toPostResponseDTO(savedPost);
     }
 
-    public Post updatePost(Long id, Post postDetails) {
+    public PostResponseDTO updatePost(Long id, PostRequestDTO postRequestDTO) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
         
-        if (postDetails.getTitle() != null) post.setTitle(postDetails.getTitle());
-        if (postDetails.getContent() != null) post.setContent(postDetails.getContent());
+        if (postRequestDTO.getTitle() != null) post.setTitle(postRequestDTO.getTitle());
+        if (postRequestDTO.getContent() != null) post.setContent(postRequestDTO.getContent());
 
-        return postRepository.saveAndFlush(post);
+        Post updatedPost =  postRepository.saveAndFlush(post);
+        return postMapper.toPostResponseDTO(updatedPost);
     }
 
     public boolean deletePost(Long id) {
@@ -61,9 +75,11 @@ public class PostService {
         return true;
     }
 
-    public List<Post> getRecentPosts(int page) {
+    public List<PostResponseDTO> getRecentPosts(int page) {
         Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE);
-        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return postRepository.findAllByOrderByCreatedAtDesc(pageable).stream()
+            .map(postMapper::toPostResponseDTO)
+            .collect(Collectors.toList());
     } 
     
     @Transactional
