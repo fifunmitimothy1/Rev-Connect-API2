@@ -96,4 +96,11 @@ public class PostController {
         Media media = (Media) mediaService.getMediaByPostId(id);
         return ResponseEntity.ok(media);
     }
+
+    @PostMapping("/pin/{id}")
+    public ResponseEntity UpdatePin(@PathVariable BigInteger id, @RequestParam("isPinned") String isPinned) {
+        System.out.println("id: "+id+" isPinned: "+isPinned);
+        postService.updatePin(id,Boolean.parseBoolean(isPinned));
+        return ResponseEntity.ok().build();
+    }
 }

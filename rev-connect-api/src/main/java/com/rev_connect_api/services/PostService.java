@@ -100,4 +100,8 @@ public class PostService {
                 .isPinned(postCreateRequest.getIsPinned())
                 .build();
     }
+
+    public void updatePin (BigInteger id,boolean isPinned){
+        postRepository.updatePin(id, isPinned);
+    }
 }

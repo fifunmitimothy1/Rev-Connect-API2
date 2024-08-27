@@ -10,14 +10,23 @@ import java.sql.Timestamp;
 public class Post {
 
     @Id
+    @Column
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private BigInteger postId;
+
+    @Column
     private BigInteger userId;
+    @Column
     private Timestamp createdAt;
+    @Column
     private Timestamp updatedAt;
+    @Column
     private Timestamp pinnedAt;
+    @Column
     private String title;
+    @Column
     private String content;
+    @Column
     private Boolean isPinned; // still have to set default value to false
 
     public Post() {}
