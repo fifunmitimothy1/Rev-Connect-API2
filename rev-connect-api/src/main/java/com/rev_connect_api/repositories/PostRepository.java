@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, BigInteger> {
 
     List<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
-
+    boolean existsByPostId(BigInteger postId);
     Optional<Post> getPostByPostId(BigInteger id);
 
     void deletePostByPostId(BigInteger id);

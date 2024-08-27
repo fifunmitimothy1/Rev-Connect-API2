@@ -81,6 +81,16 @@ public class Post {
         return new Builder();
     }
 
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId=" + postId +
+                ", userId=" + userId +
+                ", content=" + content + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt=" + updatedAt + '\'' +
+                '}';
+    }
 
     public static final class Builder {
         private BigInteger postId;
@@ -126,5 +136,7 @@ public class Post {
         public Post build() {
             return new Post(this);
         }
+
+
     }
 }

@@ -2,6 +2,8 @@ package com.rev_connect_api.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="PostLikes")
 public class PostLikes {
@@ -17,12 +19,12 @@ public class PostLikes {
     private long postId;
 
     @Column(name="timePosted")
-    private long timePosted;
+    private LocalDateTime timePosted;
 
     public PostLikes() {}
-    public PostLikes(long postLikesId, long userId, long postId, long timePosted) {
-        this.userId = userId;
+    public PostLikes(long postId, long userId, LocalDateTime timePosted) {
         this.postId = postId;
+        this.userId = userId;
         this.timePosted = timePosted;
     }
     public long getPostLikesId() {
@@ -43,10 +45,10 @@ public class PostLikes {
     public void setPostId(long postId) {
         this.postId = postId;
     }
-    public long getTimePosted() {
+    public LocalDateTime getTimePosted() {
         return timePosted;
     }
-    public void setTimePosted(long timePosted) {
+    public void setTimePosted(LocalDateTime timePosted) {
         this.timePosted = timePosted;
     }
 

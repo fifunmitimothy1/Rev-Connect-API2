@@ -25,8 +25,8 @@ public class PostResponse {
 
     @Override
     public String toString() {
-        return "CommentResponse{" +
-                "comment=" + post +
+        return "PostResponse{" +
+                "post=" + post +
                 ", likesCount=" + likesCount +
                 '}';
     }

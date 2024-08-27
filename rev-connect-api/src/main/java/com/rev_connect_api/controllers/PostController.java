@@ -1,6 +1,7 @@
 package com.rev_connect_api.controllers;
 
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.dto.PostResponse;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.services.MediaService;
@@ -52,15 +53,20 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> GetPostById(@PathVariable BigInteger id) {
-        Post response = postService.getPostById(id);
+    public ResponseEntity<PostResponse> GetPostById(@PathVariable BigInteger id) {
+        Post post = postService.getPostById(id);
+        long likesCount = postService.countLikesForPost(id.longValue());
+        PostResponse response = new PostResponse(post, likesCount);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Post>> GetRecentPosts(@RequestParam int page) {
+    public ResponseEntity<List<PostResponse>> GetRecentPosts(@RequestParam int page) {
         List<Post> posts = postService.getRecentPosts(page);
-        return ResponseEntity.ok(posts);
+        List<PostResponse> responses = posts.stream()
+                .map(post -> new PostResponse(post, postService.countLikesForPost(post.getPostId().longValue())))
+                .toList();
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/media/{postId}")
@@ -77,12 +83,14 @@ public class PostController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Post> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
-                                               @PathVariable BigInteger id) {
+    public ResponseEntity<PostResponse> UpdatePostById(@RequestBody PostCreateRequest postCreateRequest,
+                                                       @PathVariable BigInteger id) {
         Post post = postService.postDtoToPost(postCreateRequest);
         post.setPostId(id);
         post = postService.updatePost(post);
-        return ResponseEntity.ok(post);
+        long likesCount = postService.countLikesForPost(id.longValue());
+        PostResponse response = new PostResponse(post, likesCount);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/media")

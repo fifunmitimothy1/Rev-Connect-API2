@@ -3,6 +3,7 @@ package com.rev_connect_api.services;
 import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.repositories.PostLikesRepository;
 import com.rev_connect_api.repositories.PostRepository;
 import com.rev_connect_api.util.TimestampUtil;
 import jakarta.transaction.Transactional;
@@ -26,11 +27,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final MediaService mediaService;
     private final TimestampUtil timestampUtil;
+    private final PostLikesRepository postLikesRepository;
 
-    public PostService(PostRepository postRepository, MediaService mediaService, TimestampUtil timestampUtil) {
+    public PostService(PostRepository postRepository, MediaService mediaService, TimestampUtil timestampUtil, PostLikesRepository postLikesRepository) {
         this.postRepository = postRepository;
         this.mediaService = mediaService;
         this.timestampUtil = timestampUtil;
+        this.postLikesRepository = postLikesRepository;
     }
 
     public Post savePost(Post post) {
@@ -47,6 +50,8 @@ public class PostService {
 
     public Post getPostById(BigInteger id) {
         Optional<Post> post = postRepository.getPostByPostId(id);
+        System.out.println("In getPostById");
+        System.out.println(post.toString());
         if(post.isEmpty()) {
             return null;
         }
@@ -57,6 +62,14 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE);
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
         return posts;
+    }
+
+    public long countLikesForPost(long postId){
+        return postLikesRepository.countByPostId(postId);
+    }
+
+    public boolean doesPostExist(long postId) {
+        return postRepository.existsByPostId(BigInteger.valueOf(postId));
     }
 
     @Transactional
