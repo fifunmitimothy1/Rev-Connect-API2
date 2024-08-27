@@ -24,6 +24,7 @@ import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.models.Role;
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.ProfileRepository;
+import com.rev_connect_api.repositories.UserRepository;
 import com.rev_connect_api.security.JwtUtil;
 import com.rev_connect_api.utils.UserUtils;
 
@@ -34,6 +35,8 @@ public class NameAndBioTest {
     TestRestTemplate testRestTemplate;
     @Autowired
     ProfileRepository profileRepository;
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     JwtUtil jwtUtil;
 
