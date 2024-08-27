@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service
 public class MediaService {
@@ -33,7 +34,7 @@ public class MediaService {
 
     // The method to save the actual Media entity to database
     @Transactional
-    public Media saveMedia(MultipartFile file, BigInteger postId, Timestamp createdAt) {
+    public Media saveMedia(MultipartFile file, BigInteger postId, LocalDateTime createdAt) {
         String path;
         try {
             path = saveFile(file);
