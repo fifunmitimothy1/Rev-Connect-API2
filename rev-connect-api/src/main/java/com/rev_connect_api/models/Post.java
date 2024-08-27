@@ -84,7 +84,6 @@ public class Post {
         return new Builder();
     }
 
-
     public static class Builder {
         private BigInteger postId;
         private BigInteger userId;

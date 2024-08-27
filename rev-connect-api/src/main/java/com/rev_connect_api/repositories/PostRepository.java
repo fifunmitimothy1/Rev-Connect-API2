@@ -14,7 +14,7 @@ public interface PostRepository extends JpaRepository<Post, BigInteger> {
 
     List<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    Optional<Post> getPostByPostId(BigInteger id);
+    <T> Optional<T> getPostByPostId(BigInteger id);
 
     void deletePostByPostId(BigInteger id);
 }

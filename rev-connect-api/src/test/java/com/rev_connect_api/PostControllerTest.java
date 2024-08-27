@@ -194,7 +194,7 @@ public class PostControllerTest {
         // Create post
         SponsoredPostCreateRequest postRequest = new SponsoredPostCreateRequest("title", "content", "sponsor");
         ResponseEntity<SponsoredPost> response = postController.CreateSponsoredPost(postRequest.getTitle(), postRequest.getContent(), null, postRequest.getSponsor());
-        Post postResponse = response.getBody();
+        SponsoredPost postResponse = response.getBody();
 
         // Verifies that the controller returns a post entity similar to the post request
         assertEqualsPost(postRequest, postResponse);
@@ -202,6 +202,13 @@ public class PostControllerTest {
         // Verifies that a post id is given to the response, it should be 1 as the entity is auto-generating
         response = postController.GetPostById(id);
         assertEquals(id, response.getBody().getPostId());
+    }
+
+    // Verifies if the request content of post is equal to the post from response body
+    private void assertEqualsPost(SponsoredPostCreateRequest postRequest, SponsoredPost post) {
+        assertEquals(postRequest.getTitle(), post.getTitle());
+        assertEquals(postRequest.getContent(), post.getContent());
+        assertEquals(postRequest.getSponsor(), post.getSponsor());
     }
 
     // Verifies if the request content of post is equal to the post from response body

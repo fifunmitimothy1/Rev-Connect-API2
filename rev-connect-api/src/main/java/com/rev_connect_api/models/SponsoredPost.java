@@ -40,7 +40,7 @@ public class SponsoredPost extends Post{
         sponsor = builder.sponsor;
     }
 
-    public static Builder spbuilder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -48,6 +48,7 @@ public class SponsoredPost extends Post{
         private String sponsor;
 
         public Builder() {
+            System.out.println("spp");
         }
 
         public Builder sponsor(String val) {

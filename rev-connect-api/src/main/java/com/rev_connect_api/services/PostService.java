@@ -45,17 +45,26 @@ public class PostService {
 
     @Transactional
     public Post savePost(Post post, MultipartFile file) {
-        Post response;
-        if (post instanceof SponsoredPost) {
-            response = sponsoredPostRepository.save((SponsoredPost)post);
-        }
-        response = postRepository.save(post);
+        Post response = postRepository.save(post);
         mediaService.saveMedia(file, response.getPostId(), response.getCreatedAt());
         return response;
     }
 
-    public Post getPostById(BigInteger id) {
-        Optional<Post> post = postRepository.getPostByPostId(id);
+    @Transactional
+    public SponsoredPost saveSponsoredPost(SponsoredPost post) {
+        SponsoredPost response = sponsoredPostRepository.save(post);
+        return response;
+    }
+
+    @Transactional
+    public SponsoredPost saveSponsoredPost(SponsoredPost post, MultipartFile file) {
+        SponsoredPost response = sponsoredPostRepository.save(post);
+        mediaService.saveMedia(file, response.getPostId(), response.getCreatedAt());
+        return response;
+    }
+
+    public <T> T getPostById(BigInteger id) {
+        Optional<T> post = postRepository.getPostByPostId(id);
         if(post.isEmpty()) {
             return null;
         }
@@ -105,8 +114,8 @@ public class PostService {
     }
 
     public SponsoredPost sponsoredpostDtoToPost(SponsoredPostCreateRequest postCreateRequest) {
-        return SponsoredPost.builder()
-                .sponsor(postCreateRequest.getContent())
+        return (SponsoredPost) SponsoredPost.builder()
+                .sponsor(postCreateRequest.getSponsor())
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .build();

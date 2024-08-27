@@ -63,16 +63,16 @@ public class PostController {
         post.setCreatedAt(timestampUtil.getCurrentTimestamp());
         SponsoredPost response;
         if(file != null) {
-            response = postService.savePost(post, file);
+            response = postService.saveSponsoredPost(post, file);
         } else {
-            response = postService.savePost(post);
+            response = postService.saveSponsoredPost(post);
         }
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> GetPostById(@PathVariable BigInteger id) {
-        Post response = postService.getPostById(id);
+    public <T> ResponseEntity<T> GetPostById(@PathVariable BigInteger id) {
+        T response = postService.getPostById(id);
         return ResponseEntity.ok(response);
     }
 
