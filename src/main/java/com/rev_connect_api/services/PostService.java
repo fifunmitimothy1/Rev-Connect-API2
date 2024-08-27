@@ -7,9 +7,10 @@ import com.rev_connect_api.repositories.PostRepository;
 import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.transaction.Transactional;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,6 +67,14 @@ public class PostService {
         List<Post> posts = postRepository.findAllByTag(tag, pageable);
         return posts;
     }
+
+    // //page variable determines which page of results is requested
+    // //TODO: uncomment and refactor once Followers implementation is merged
+    // public List<Post> getRecentPostsByFollowing(int page, BigInteger userId) {
+    //     Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE, Sort.by("createdAt").descending());
+    //     List<Post> posts = postRepository.findAllByUsersFollows(userId, pageable);
+    //     return posts;
+    // }
 
     @Transactional
     public boolean deletePostById(BigInteger id) {

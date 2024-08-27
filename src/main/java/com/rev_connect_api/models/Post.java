@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -23,6 +25,8 @@ public class Post {
     private Timestamp updatedAt;
     private String title;
     private String content;
+    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY,  cascade = CascadeType.REMOVE)
+    private List<Tag> tags = new ArrayList<>();
 
     private Post(Builder builder) {
         postId = builder.postId;
