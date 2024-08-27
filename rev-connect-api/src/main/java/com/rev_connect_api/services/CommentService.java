@@ -34,13 +34,16 @@ public class CommentService {
   }
 
   public Comment getCommentById(long commentId) {
-    return commentRepository.findById(commentId).get();
+    return commentRepository.findById(commentId)
+            .orElseThrow(() -> new RuntimeException("Comment not found with id: " + commentId));
   }
-
   public boolean doesCommentExist(long commentId) {
     return commentRepository.existsByCommentId(commentId);
   }
   public long getLikesCountForComment(long commentId) {
     return commentLikesRepository.countByCommentId(commentId);
+  }
+  public List<Comment> getAllCommentsByPostId(long postId) {
+    return commentRepository.findByPostId(postId);
   }
 }

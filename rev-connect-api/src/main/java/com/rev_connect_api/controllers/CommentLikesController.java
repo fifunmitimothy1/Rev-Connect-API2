@@ -14,22 +14,24 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RestController
+@RequestMapping("/api/post")
 public class CommentLikesController {
     @Autowired
     private CommentLikesService commentLikesService;
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/comment/{commentId}/like/{userId}")
+    @PutMapping("/comment/{commentId}/like")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<CommentResponse> likeComment(@PathVariable long userId, @PathVariable long commentId) {
+    public ResponseEntity<CommentResponse> likeComment(@RequestParam long userId, @PathVariable long commentId) {
         if (commentService.doesCommentExist(commentId)) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
-            LocalDateTime now = LocalDateTime.now();
-//            String dateTimeString = now.format(formatter);
-            CommentLikes like = new CommentLikes(userId, commentId, now);
-            commentLikesService.like(like);
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
+//            LocalDateTime now = LocalDateTime.now();
+////            String dateTimeString = now.format(formatter);
+//            CommentLikes like = new CommentLikes(userId, commentId, now);
+//            commentLikesService.like(like);
 
+            commentLikesService.like(commentId, userId);
             Comment updatedComment = commentService.getCommentById(commentId);
             long likesCount = commentLikesService.countLikesForComment(commentId);
 
@@ -37,27 +39,9 @@ public class CommentLikesController {
 
             return new ResponseEntity<>(commentResponse, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-//    @PostMapping("/comment/{commentId}/unlike/{userId}")
-//    @CrossOrigin(origins = "*")
-//    public ResponseEntity<CommentResponse> unlikeComment(@PathVariable long userId, @PathVariable long commentId) {
-//        if (commentService.doesCommentExist(commentId)) {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
-//            LocalDateTime now = LocalDateTime.now();
-//            String dateTimeString = now.format(formatter);
-//            CommentLikes unlike = new CommentLikes(userId, commentId, dateTimeString);
-//            commentLikesService.unlike(userId, commentId);
-//            Comment updatedComment = commentService.getCommentById(commentId);
-//            long likesCount = commentLikesService.countLikesForComment(commentId);
-//
-//            CommentResponse commentResponse = new CommentResponse(updatedComment, likesCount);
-//
-//            return new ResponseEntity<>(commentResponse, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+
 }

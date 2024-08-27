@@ -3,35 +3,37 @@ package com.rev_connect_api.services;
 import com.rev_connect_api.models.CommentLikes;
 import com.rev_connect_api.repositories.CommentLikesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class CommentLikesService {
-    @Autowired
-    private CommentLikesRepository commentLikesRepository;
 
-//    public List<CommentLikes> getLikesForComment(long commentId){
-//        return commentLikesRepository.findByCommentLikesId(commentId);
-//    }
-public void like(CommentLikes like) {
+    private final CommentLikesRepository commentLikesRepository;
+
+    @Autowired
+    CommentLikesService(CommentLikesRepository commentLikesRepository) {
+        this.commentLikesRepository = commentLikesRepository;
+    }
+
+
+public void like(long commentId, long userId) {
     // Check if the user already liked the comment or post
     Optional<CommentLikes> existingLike = commentLikesRepository.findByUserIdAndCommentId(
-            like.getUserId(), like.getCommentId());
-    if (!existingLike.isPresent()) {
-        commentLikesRepository.save(like);
+            userId, commentId);
+    if (existingLike.isEmpty()) {
+        CommentLikes newLike = new CommentLikes(commentId, userId, LocalDateTime.now());
+        commentLikesRepository.save(newLike);
     }else{
         commentLikesRepository.delete(existingLike.get());
     }
 }
 
-//    public void unlike(long userId, long commentId) {
-//        Optional<CommentLikes> existingLike = commentLikesRepository.findByUserIdAndCommentId(
-//                userId, commentId);
-//        existingLike.ifPresent(commentLikesRepository::delete);
-//    }
+
     public long countLikesForComment(long commentId) {
         return commentLikesRepository.countByCommentId(commentId);
     }

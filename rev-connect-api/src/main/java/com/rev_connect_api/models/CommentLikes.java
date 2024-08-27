@@ -25,9 +25,9 @@ public class CommentLikes {
 
     public CommentLikes() {}
 
-    public CommentLikes( long userId, long commentId, LocalDateTime timePosted) {
-        this.userId = userId;
+    public CommentLikes(long commentId,long userId, LocalDateTime timePosted) {
         this.commentId = commentId;
+        this.userId = userId;
         this.timePosted = timePosted;
     }
 
