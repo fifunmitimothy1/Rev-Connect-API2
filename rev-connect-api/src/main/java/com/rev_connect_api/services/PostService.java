@@ -102,6 +102,22 @@ public class PostService {
         return response;
     }
 
+    @Transactional
+    public SponsoredPost updateSponsoredPost(SponsoredPost post) {
+        SponsoredPost fetchedPost = getPostById(post.getPostId());
+        if(fetchedPost == null) {
+            return null;
+        }
+        fetchedPost.setUpdatedAt(timestampUtil.getCurrentTimestamp());
+        fetchedPost.setTitle(post.getTitle());
+        fetchedPost.setContent(post.getContent());
+        fetchedPost.setSponsor(post.getSponsor());
+
+
+        SponsoredPost response = saveSponsoredPost(fetchedPost);
+        return response;
+    }
+
     public Media saveMedia(Media media) {
         return media;
     }

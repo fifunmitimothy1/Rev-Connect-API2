@@ -96,8 +96,14 @@ public class PostController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Post> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
+    public ResponseEntity<Object> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
                                                @PathVariable BigInteger id) {
+        if (postCreateRequest instanceof SponsoredPostCreateRequest) {
+            SponsoredPost post = postService.sponsoredpostDtoToPost((SponsoredPostCreateRequest)postCreateRequest);
+            post.setPostId(id);
+            post = postService.updateSponsoredPost(post);
+            return ResponseEntity.ok(post);
+        }
         Post post = postService.postDtoToPost(postCreateRequest);
         post.setPostId(id);
         post = postService.updatePost(post);

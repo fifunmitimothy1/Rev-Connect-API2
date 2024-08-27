@@ -15,7 +15,7 @@ public class SponsoredPost extends Post{
         tags = new ArrayList<>();
     }
 
-    public void setSponsorName(String sponsor) {
+    public void setSponsor(String sponsor) {
         this.sponsor = sponsor;
     }
 

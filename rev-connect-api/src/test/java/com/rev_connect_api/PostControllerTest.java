@@ -135,9 +135,13 @@ public class PostControllerTest {
         title = "updated title";
         content = "updated content";
         postRequest = new PostCreateRequest(title, content);
-
-        response = postController.UpdatePostById(postRequest, postResponse.getPostId());
-        postResponse = response.getBody();
+        
+        ResponseEntity<Object> result = postController.UpdatePostById(postRequest, postResponse.getPostId());
+        if (result.getBody() instanceof Post) {
+            postResponse = (Post)result.getBody();
+        } else {
+            fail();
+        }
 
         // Verifies that the request is equal to the response
         assertEqualsPost(postRequest, postResponse);
@@ -202,6 +206,44 @@ public class PostControllerTest {
         // Verifies that a post id is given to the response, it should be 1 as the entity is auto-generating
         response = postController.GetPostById(id);
         assertEquals(id, response.getBody().getPostId());
+    }
+
+    // This test should test both the update and get operation
+    @Test
+    @DirtiesContext
+    public void TestUpdateSponsoredPost() {
+        final BigInteger id = new BigInteger("1");
+        String title = "title test";
+        String content = "content test";
+        String sponsor = "sponsor test";
+
+        // Create post
+        SponsoredPostCreateRequest postRequest = new SponsoredPostCreateRequest(title, content, sponsor);
+        postController.CreateSponsoredPost(title, content, null, sponsor);
+
+        // Fetches that post for comparison to ensure the get request is working
+        ResponseEntity<SponsoredPost> response = postController.GetPostById(id);
+        SponsoredPost postResponse = response.getBody();
+
+        assertEqualsPost(postRequest, postResponse);
+
+        // Creates the request to update the previous post
+        title = "updated title";
+        content = "updated content";
+        sponsor = "updated sponsor";
+
+        postRequest = new SponsoredPostCreateRequest(title, content, sponsor);
+
+        ResponseEntity<Object> result = postController.UpdatePostById(postRequest, postResponse.getPostId());
+        if (result.getBody() instanceof SponsoredPost) {
+            postResponse = (SponsoredPost)result.getBody();
+        } else {
+            fail();
+        }
+
+        // Verifies that the request is equal to the response
+        assertEqualsPost(postRequest, postResponse);
+        assertNotNull(postResponse.getUpdatedAt());
     }
 
     // Verifies if the request content of post is equal to the post from response body
