@@ -24,9 +24,9 @@ CREATE TABLE user_roles (
 );
 
 CREATE TABLE followers (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     follower_id BIGINT NOT NULL,
     following_id BIGINT NOT NULL,
-    PRIMARY KEY (follower_id, following_id),
     FOREIGN KEY (follower_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (following_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
@@ -72,6 +72,12 @@ VALUES
 (2, 'TestBio2!'),
 (3, 'TestBio3!'),
 (4, 'TestBio4!');
+
+INSERT INTO followers (follower_id, following_id)
+VALUES
+(1,3),
+(1,4),
+(2,4)
 
 -- -- Insert posts
 -- INSERT INTO post (posted_by, post_text, created_at, updated_at)
