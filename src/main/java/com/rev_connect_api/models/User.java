@@ -62,12 +62,36 @@ public class User {
     @Column(name = "role", nullable = false)
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
-    private Set<User> followers = new HashSet<>();
+    // @ManyToMany(cascade=CascadeType.ALL)
+    // @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
+    // private Set<User> followers = new HashSet<>();
 
-    @ManyToMany(cascade=CascadeType.ALL, mappedBy="followers")
-    private Set<User> following = new HashSet<>();
+    // @ManyToMany(cascade=CascadeType.ALL, mappedBy="followers")
+    // private Set<User> following = new HashSet<>();
+
+    @OneToMany(mappedBy = "followed", fetch = FetchType.EAGER)
+    private Set<Follow> followers = new HashSet<>();
+
+    @OneToMany(mappedBy = "follower", fetch = FetchType.EAGER)
+    private Set<Follow> following = new HashSet<>();
+
+    @JsonIgnore
+    public Set<User> getFollowers() {
+        return followers.stream().map(f -> f.getFollower()).collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    public Set<User> getFollowing() {
+        return following.stream().map(f -> f.getFollowed()).collect(Collectors.toSet());
+    }
+
+    public void setFollowers(Set<User> followerUsers) {
+        followers = followerUsers.stream().map(f -> new Follow(f,this)).collect(Collectors.toSet());
+    }
+
+    public void setFollowing(Set<User> followingUsers) {
+        followers = followingUsers.stream().map(f -> new Follow(this,f)).collect(Collectors.toSet());
+    }
 
 
     public Set<Role> getRoles() {
@@ -117,8 +141,6 @@ public class User {
         this.roles = user.getRoles();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
-        this.followers = user.getFollowers();
-        this.following = user.getFollowing();
     }
 
     @Override
