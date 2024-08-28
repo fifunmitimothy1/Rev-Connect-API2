@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS business_profile;
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS personal_profiles;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS post cascade;
+DROP TABLE IF EXISTS posts cascade;
 
 -- Creating the 'users' table
 CREATE TABLE users (
