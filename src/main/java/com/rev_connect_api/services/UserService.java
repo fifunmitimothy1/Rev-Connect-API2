@@ -9,19 +9,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.rev_connect_api.dto.UserRegistrationDTO;
+import com.rev_connect_api.dto.UserResponseDTO;
 import com.rev_connect_api.dto.UserUpdateDTO;
+import com.rev_connect_api.mapper.UserMapper;
 import com.rev_connect_api.models.Role;
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.UserRepository;
 
 @Service
 public class UserService {
+
     private UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     // find a user by username
@@ -35,29 +41,30 @@ public class UserService {
          return userRepository.findByUsernameOrEmail(userName, email);
     }
 
-    public User registerUser(User user){
-        String username = user.getUsername();
-        String emailId = user.getEmail();
-        List<User> checkDuplicates=getUserDetails(username,emailId);
+    public UserResponseDTO registerUser(UserRegistrationDTO userRegistrationDTO){
+        String username = userRegistrationDTO.getUsername();
+        String emailId = userRegistrationDTO.getEmail();
+        List<User> checkDuplicates = getUserDetails(username,emailId);
 
         if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
 
         if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
-
-        if(user.getRoles().isEmpty()) {
-            user.setRoles(Set.of(Role.ROLE_USER));
+        if(userRegistrationDTO.getRoles().isEmpty()) {
+            userRegistrationDTO.setRoles((Set.of(Role.ROLE_USER)));
         }
 
         // hashing password then persisting hashed password to the database
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashedPassword);
-
-        return userRepository.saveAndFlush(user);
+        String hashedPassword = passwordEncoder.encode(userRegistrationDTO.getPassword());
+        userRegistrationDTO.setPassword(hashedPassword);
+        
+        User user = userMapper.toEntity(userRegistrationDTO);
+        User registeredUser = userRepository.saveAndFlush(user);
+        return userMapper.toDTO(registeredUser);
     }
 
-    public User updateUser(Long id, UserUpdateDTO updateDTO) {
+    public UserResponseDTO updateUser(Long id, UserUpdateDTO updateDTO) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -73,24 +80,32 @@ public class UserService {
         }
         if(updateDTO.getRoles() != null) user.setRoles(mapRoles(updateDTO.getRoles()));
 
-        return userRepository.saveAndFlush(user);
+        User updatedUser =  userRepository.saveAndFlush(user);
+        return userMapper.toDTO(updatedUser);
     }
     
-    private Set<Role> mapRoles(Set<String> roles) {
+    private Set<Role> mapRoles(Set<Role> roles) {
         // same mapping logic as in UserMapper interface
-        return roles.stream().map(Role::valueOf).collect(Collectors.toSet());
+        return roles;
     }
 
-    public void deleteUser(Long id) {
+    public boolean deleteUser(Long id) {
+        if(!userRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
         userRepository.deleteById(id);
+        return true;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+            .map(userMapper::toDTO)
+            .collect(Collectors.toList());
     }
 
-    public User findUserById(Long id) {
-       return userRepository.findById(id)
+    public UserResponseDTO findUserById(Long id) {
+       User user = userRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    }
+        return userMapper.toDTO(user);
+   }
 }

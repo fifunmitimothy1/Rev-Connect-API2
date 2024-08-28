@@ -2,6 +2,7 @@ package com.rev_connect_api.dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import com.rev_connect_api.models.Role;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,5 +36,5 @@ public class UserRegistrationDTO {
 
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    private Set<String> roles; // List of roles as strings (e.g., "ROLE_USER", "ROLE_ADMIN")
+    private Set<Role> roles = Set.of(Role.ROLE_USER); // List of roles as strings (e.g., "ROLE_USER", "ROLE_ADMIN")
 }
