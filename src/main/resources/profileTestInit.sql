@@ -1,4 +1,4 @@
-drop table if exists personal_profiles;
+/*drop table if exists personal_profiles;
 drop table if exists users cascade;
 
 CREATE TABLE users (
@@ -31,4 +31,4 @@ INSERT INTO personal_profiles (user_id, bio)
 VALUES
 (1, 'Initial bio');
 
-
+*/

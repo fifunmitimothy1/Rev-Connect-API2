@@ -8,32 +8,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rev_connect_api.exceptions.UnauthorizedUserException;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.services.PostService;
 
+/**
+ * Controller class that handles HTTP requests related to posts.
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/post")
 public class PostController {
   private PostService postService;
 
+  /**
+   * Constructs a PostController with the specified PostService.
+   * 
+   * @param postService the service used for post operations
+   */
   @Autowired
   public PostController(PostService postService) {
     this.postService = postService;
   }
 
-  @GetMapping("/feed/{id}")
-  public ResponseEntity<List<Post>> retrieveFeed(@PathVariable("id") Long targetUserId) {
+  /**
+   * Retrieves the posts visible to the authenticated user.
+   * 
+   * @return ResponseEntity containing the posts that the user can see.
+   */
+  @GetMapping("/feed")
+  public ResponseEntity<List<Post>> retrieveFeed() {
     try {
         String currentUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(postService.GetFeedForUser(currentUsername, targetUserId));
-    } catch (UnauthorizedUserException e) { // target user's ID != authenticated user's ID
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.GetFeedForUser(currentUsername));
     } catch (Exception e) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     } 

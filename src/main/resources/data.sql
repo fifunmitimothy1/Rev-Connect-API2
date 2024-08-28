@@ -1,5 +1,7 @@
 drop table if exists user_roles;
+drop table if exists posts;
 drop table if exists users cascade;
+drop table if exists connections;
 drop table if exists personal_profiles;
 -- drop table if exists post;
 
@@ -29,14 +31,21 @@ CREATE TABLE personal_profiles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- CREATE TABLE post (
---     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
---     posted_by BIGINT,
---     post_text VARCHAR(255),
---     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     FOREIGN KEY (posted_by) REFERENCES users(user_id)
--- );
+CREATE TABLE connections (
+    connection_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_A BIGINT,
+    user_B BIGINT,
+    FOREIGN KEY (user_A) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_B) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE posts (
+    postId INT AUTO_INCREMENT PRIMARY KEY,
+    postedBy BIGINT NOT NULL,
+    postText VARCHAR(255) NOT NULL,
+    timePostedEpoch BIGINT NOT NULL,
+    isPrivate BOOLEAN
+);
 
 -- Insert users
 -- passwords are hashed from "hashed_password"
@@ -63,12 +72,17 @@ VALUES
 (3, 'TestBio3!'),
 (4, 'TestBio4!');
 
+INSERT INTO connections (user_A, user_B)
+VALUES
+(1, 2),
+(2, 1);
+
 -- -- Insert posts
--- INSERT INTO post (posted_by, post_text, created_at, updated_at)
--- VALUES
--- (1, 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
-
+INSERT INTO posts (postedBy, postText, timePostedEpoch, isPrivate) 
+VALUES
+(1, 'User A Private Post', 123456789L, TRUE),
+(1, 'User A Public Post', 123456789L, FALSE),
+(2, 'User B Private Post', 123456789L, TRUE),
+(2, 'User B Public Post', 123456789L, FALSE),
+(3, 'User C Private Post', 123456789L, TRUE),
+(3, 'User C Public Post', 123456789L, FALSE);

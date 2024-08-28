@@ -42,15 +42,14 @@ public class PostsTest {
     private ObjectMapper mapper;
 
     private String userAToken;
-    private final User userA, userB;
+    private final User userA;
     private final Post userAPublicPost, userAPrivatePost, 
                         userBPublicPost, userBPrivatePost, 
                         userCPublicPost, userCPrivatePost;
 
     public PostsTest() {
         userA = new User(1L, "A", "","A@gmail.com", "TestUser", "A", false, LocalDateTime.now(), LocalDateTime.now(), Set.of(Role.ROLE_USER));
-        userB = new User(2L, "B", "","B@gmail.com", "TestUser", "B", false, LocalDateTime.now(), LocalDateTime.now(), Set.of(Role.ROLE_USER));
-        
+          
         Long epochTime = 123456789L;
         userAPrivatePost = new Post(1, 1L, "User A Private Post", epochTime, true);
         userAPublicPost = new Post(2, 1L, "User A Public Post", epochTime, false);
@@ -81,7 +80,7 @@ public class PostsTest {
             HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
             //Send HTTP request
-            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed/" + userA.getUserId(), HttpMethod.GET, requestEntity, String.class);
+            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed", HttpMethod.GET, requestEntity, String.class);
             
             //Verify response status code
             HttpStatusCode statusCode = response.getStatusCode();
@@ -102,7 +101,7 @@ public class PostsTest {
             HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
             //Send HTTP request
-            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed/" + userA.getUserId(), HttpMethod.GET, requestEntity, String.class);
+            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed", HttpMethod.GET, requestEntity, String.class);
             
             //Verify response status code
             HttpStatusCode statusCode = response.getStatusCode();
@@ -122,7 +121,7 @@ public class PostsTest {
             HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
             //Send HTTP request
-            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed/" + userA.getUserId(), HttpMethod.GET, requestEntity, String.class);
+            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed", HttpMethod.GET, requestEntity, String.class);
             
             //Verify response status code
             HttpStatusCode statusCode = response.getStatusCode();
@@ -142,7 +141,7 @@ public class PostsTest {
             HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
             //Send HTTP request
-            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed/" + userA.getUserId(), HttpMethod.GET, requestEntity, String.class);
+            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed", HttpMethod.GET, requestEntity, String.class);
             
             //Verify response status code
             HttpStatusCode statusCode = response.getStatusCode();
@@ -152,22 +151,6 @@ public class PostsTest {
             List<Post> posts = mapper.readValue(response.getBody().toString(), new TypeReference<List<Post>>() {});
             Assertions.assertFalse(posts.contains(userAPrivatePost));
             Assertions.assertFalse(posts.contains(userAPublicPost));
-        }
-
-        @Test
-        public void differentUserAuthenticationReturnsForbidden () {
-            //Generate HTTP request
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + userAToken);
-            HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
-
-            //Send HTTP request
-            ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/feed/" + userB.getUserId(), HttpMethod.GET, requestEntity, String.class);
-            
-            //Verify response status code
-            HttpStatusCode statusCode = response.getStatusCode();
-            Assertions.assertEquals(HttpStatus.FORBIDDEN, statusCode);
         }
     }
 }
