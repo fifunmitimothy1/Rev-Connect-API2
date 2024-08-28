@@ -20,6 +20,9 @@ public class PostService {
     private UserRepository userRepository;
     private ConnectionService connectionService;
     
+    /**
+     * Constructs a post service with necessary dependencies injected.
+     */
     @Autowired
     public PostService(PostRepository postRepository, UserRepository userRepository, ConnectionService connectionService) {
         this.postRepository = postRepository;

@@ -30,10 +30,24 @@ import com.rev_connect_api.security.JwtUtil;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/postTestInit.sql")
 public class PostsTest {
-    @Autowired
+    
     TestRestTemplate testRestTemplate;
-    @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
+    public PostsTest(TestRestTemplate testRestTemplate, JwtUtil jwtUtil) {
+        this.testRestTemplate = testRestTemplate;
+        this.jwtUtil = jwtUtil;
+
+        userA = new User(1L, "A", "","A@gmail.com", "TestUser", "A", false, LocalDateTime.now(), LocalDateTime.now(), Set.of(Role.ROLE_USER));
+
+        userAPrivatePost = new Post(1L, 1L, "User A Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
+        userAPublicPost = new Post(2L, 1L, "User A Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
+        userBPrivatePost = new Post(3L, 2L, "User B Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
+        userBPublicPost = new Post(4L, 2L, "User B Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
+        userCPrivatePost = new Post(5L, 3L, "User C Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
+        userCPublicPost = new Post(6L, 3L, "User C Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
+    }
     
     @LocalServerPort
     private int port;
@@ -46,17 +60,6 @@ public class PostsTest {
     private final Post userAPublicPost, userAPrivatePost, 
                         userBPublicPost, userBPrivatePost, 
                         userCPublicPost, userCPrivatePost;
-
-    public PostsTest() {
-        userA = new User(1L, "A", "","A@gmail.com", "TestUser", "A", false, LocalDateTime.now(), LocalDateTime.now(), Set.of(Role.ROLE_USER));
-
-        userAPrivatePost = new Post(1L, 1L, "User A Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
-        userAPublicPost = new Post(2L, 1L, "User A Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
-        userBPrivatePost = new Post(3L, 2L, "User B Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
-        userBPublicPost = new Post(4L, 2L, "User B Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
-        userCPrivatePost = new Post(5L, 3L, "User C Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
-        userCPublicPost = new Post(6L, 3L, "User C Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
-    }
 
     @BeforeEach
     public void beforeEach() {
