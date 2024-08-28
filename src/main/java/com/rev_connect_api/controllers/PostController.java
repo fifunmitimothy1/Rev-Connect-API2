@@ -1,102 +1,106 @@
 package com.rev_connect_api.controllers;
 
-import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.dto.PostRequestDTO;
+import com.rev_connect_api.dto.PostResponseDTO;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
-import com.rev_connect_api.security.Principal;
 import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
-import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+
+
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
 
-    private final TimestampUtil timestampUtil;
     private final PostService postService;
     private final MediaService mediaService;
 
-    public PostController(TimestampUtil timestampUtil, PostService postService, MediaService mediaService) {
-        this.timestampUtil = timestampUtil;
+    public PostController(PostService postService, MediaService mediaService) {
         this.postService = postService;
         this.mediaService = mediaService;
     }
 
-    // Could not get ModelAttribute working, so I used this solution which is not the best
-    @PostMapping
-    public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
-                                           @RequestParam("content") String content,
-                                           @RequestParam(value = "file", required = false) MultipartFile file) {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication auth = context.getAuthentication();
-        Principal principal = (Principal) auth.getPrincipal();
-
-        Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
-        post.setUserId(new BigInteger(principal.getUserId().toString()));
-        post.setCreatedAt(timestampUtil.getCurrentTimestamp());
-
-        Post response;
-        if(file != null) {
-            response = postService.savePost(post, file);
-        } else {
-            response = postService.savePost(post);
-        }
-        return ResponseEntity.ok(response);
+    @PostMapping()
+    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO postRequestDTO) {
+       PostResponseDTO createdPost = postService.savePost(postRequestDTO);
+       return new ResponseEntity<>(createdPost, HttpStatus.CREATED); 
     }
 
+    // Could not get ModelAttribute working, so I used this solution which is not the best
+    // @PostMapping()
+    // public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
+    //                                        @RequestParam("content") String content,
+    //                                        @RequestParam(value = "file", required = false) MultipartFile file) {
+    //     SecurityContext context = SecurityContextHolder.getContext();
+    //     Authentication auth = context.getAuthentication();
+    //     Principal principal = (Principal) auth.getPrincipal();
+
+    //     Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
+    //     post.setUserId(new BigInteger(principal.getUserId().toString()));
+    //     post.setCreatedAt(timestampUtil.getCurrentTimestamp());
+
+    //     Post response;
+    //     if(file != null) {
+    //         response = postService.savePost(post, file);
+    //     } else {
+    //         response = postService.savePost(post);
+    //     }
+    //     return ResponseEntity.ok(response);
+    // }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Post> GetPostById(@PathVariable BigInteger id) {
-        Post response = postService.getPostById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<PostResponseDTO> getPostById(@PathVariable Long id) {
+        PostResponseDTO post = postService.getPostById(id);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Post>> GetRecentPosts(@RequestParam int page) {
-        List<Post> posts = postService.getRecentPosts(page);
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
+       List<PostResponseDTO> posts = postService.getAllPosts();
+       return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/recent")
+    public ResponseEntity<List<PostResponseDTO>> getRecentPosts(@RequestParam int page) {
+        List<PostResponseDTO> posts = postService.getRecentPosts(page);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByAuthorId(@PathVariable Long authorId) {
+    List<PostResponseDTO> posts = postService.getPostsByAuthorId(authorId);
+    return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+    
     @GetMapping("/media/{postId}")
-    public ResponseEntity<List<Media>> getMediaByPostId(@PathVariable BigInteger postId) {
-    List<Media> mediaList =  mediaService.getMediaByPostId(postId);
-    return ResponseEntity.ok(mediaList);
+    public ResponseEntity<List<Media>> getMediaByPostId(@PathVariable Long postId) {
+        List<Media> mediaList =  mediaService.getMediaByPostId(postId);
+        return new ResponseEntity<>(mediaList, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<PostResponseDTO> updatePost(@RequestBody @Valid PostRequestDTO postRequestDTO, @PathVariable Long id) {
+        PostResponseDTO updatedPost = postService.updatePost(id, postRequestDTO);
+        return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> DeletePostById(@PathVariable BigInteger id) {
+    public ResponseEntity<Boolean> deletePostById(@PathVariable Long id) {
         boolean deleted = postService.deletePostById(id);
-        return ResponseEntity.ok(deleted);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<Post> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
-                                               @PathVariable BigInteger id) {
-        Post post = postService.postDtoToPost(postCreateRequest);
-        post.setPostId(id);
-        post = postService.updatePost(post);
-        return ResponseEntity.ok(post);
-    }
-
-    @GetMapping("/{id}/media")
-    public ResponseEntity<Media> GetMediaByPostId(@PathVariable BigInteger id) {
-        Media media = (Media) mediaService.getMediaByPostId(id);
-        return ResponseEntity.ok(media);
+        return new ResponseEntity<>(deleted, HttpStatus.NO_CONTENT);
     }
 }

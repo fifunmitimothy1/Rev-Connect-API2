@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -18,12 +18,12 @@ public class Media {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private BigInteger mediaId;
-    private BigInteger postId;
+    private Long mediaId;
+    private Long postId;
     private String mediaUrl;
     @Enumerated(EnumType.STRING)
     private MediaType mediaType;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     private Media(Builder builder) {
         setMediaId(builder.mediaId);
@@ -38,21 +38,21 @@ public class Media {
     }
 
     public static final class Builder {
-        private BigInteger mediaId;
-        private BigInteger postId;
+        private Long mediaId;
+        private Long postId;
         private String mediaUrl;
         private MediaType mediaType;
-        private Timestamp createdAt;
+        private LocalDateTime createdAt;
 
         private Builder() {
         }
 
-        public Builder mediaId(BigInteger val) {
+        public Builder mediaId(Long val) {
             mediaId = val;
             return this;
         }
 
-        public Builder postId(BigInteger val) {
+        public Builder postId(Long val) {
             postId = val;
             return this;
         }
@@ -67,7 +67,7 @@ public class Media {
             return this;
         }
 
-        public Builder createdAt(Timestamp val) {
+        public Builder createdAt(LocalDateTime val) {
             createdAt = val;
             return this;
         }
