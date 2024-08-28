@@ -1,7 +1,7 @@
 drop table if exists user_roles;
 drop table if exists users cascade;
 drop table if exists personal_profiles;
-drop table if exists posts;
+drop table if exists posts cascade;
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -31,12 +31,12 @@ CREATE TABLE personal_profiles (
 
 CREATE TABLE posts (
     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    posted_by BIGINT,
-    title VARCHAR(255),
-    content VARCHAR(255),
+    author_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (posted_by) REFERENCES users(user_id)
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- Insert users
@@ -65,7 +65,7 @@ VALUES
 (4, 'TestBio4!');
 
 -- Insert posts
-INSERT INTO posts (posted_by, title,  content, created_at, updated_at)
+INSERT INTO posts (author_id, title, content, created_at, updated_at)
 VALUES
 (1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 (1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -73,3 +73,5 @@ VALUES
 (1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
+ALTER SEQUENCE user_sequence RESTART WITH 5;
+ALTER SEQUENCE post_sequence RESTART WITH 5;
