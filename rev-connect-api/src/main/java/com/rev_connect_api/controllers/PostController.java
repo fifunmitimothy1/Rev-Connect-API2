@@ -98,8 +98,8 @@ public class PostController {
     }
 
     @PostMapping("/pin/{id}")
-    public ResponseEntity UpdatePin(@PathVariable BigInteger id, @RequestParam("isPinned") String isPinned) {
-        postService.updatePin(id,Boolean.parseBoolean(isPinned));
+    public ResponseEntity UpdatePin(@PathVariable BigInteger id, @RequestParam("isPinned") Boolean isPinned) {
+        postService.updatePin(id,isPinned);
         return ResponseEntity.ok().build();
     }
 }
