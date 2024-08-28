@@ -83,7 +83,7 @@ public class BusinessProfileController {
         if (confirmUpdate != null) {
             return new ResponseEntity<>(confirmUpdate, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
 }

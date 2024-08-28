@@ -48,6 +48,18 @@ public class BusinessProfile {
         this.bannerURL = bannerURL;
     }
 
+    /**
+     * Basic All Args Constructor
+     */
+    public BusinessProfile(long id, User user, String bioText, String theme, String profilePictureURL, String bannerURL) {
+        this.id = id;
+        this.user = user;
+        this.bioText = bioText;
+        this.theme = theme;
+        this.profilePictureURL = profilePictureURL;
+        this.bannerURL = bannerURL;
+    }
+
 
     // Generated Getters and Setters
     public long getId() {

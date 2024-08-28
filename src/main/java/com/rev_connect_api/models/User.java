@@ -10,7 +10,7 @@ public class User {
 
 	@Id
 	@GeneratedValue
-	private Long id;
+	private long id;
 
 	@Column(name = "username")
 	private String username;
@@ -45,17 +45,6 @@ public class User {
 	}
 
 	public User(long id, String username, String firstName, String lastName,String userEmail,String password,Boolean isBusiness) {
-		this.id = id;
-		this.username = username;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.userEmail = userEmail;
-		this.password = password;
-		this.isBusiness = isBusiness;
-	}
-
-	public User(Long id, String username, String firstName, String lastName, String userEmail, String password,
-			Boolean isBusiness) {
 		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
