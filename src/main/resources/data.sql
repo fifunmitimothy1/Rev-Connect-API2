@@ -1,7 +1,7 @@
 drop table if exists user_roles;
 drop table if exists users cascade;
 drop table if exists personal_profiles;
--- drop table if exists post;
+drop table if exists posts cascade;
 drop table if exists tags;
 
 CREATE TABLE users (
@@ -30,22 +30,21 @@ CREATE TABLE personal_profiles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE post (
-    postId BIGINT AUTO_INCREMENT PRIMARY KEY,
-    postedBy BIGINT,
-    postText VARCHAR(255),
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (postedBy) REFERENCES users(userId)
+CREATE TABLE posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    author_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
-
 CREATE TABLE tags{
     tagId BIGINT AUTO_INCREMENT PRIMARY KEY,
     postId BIGINT,
     tagString VARCHAR(255),
     FOREIGN KEY (postId) references posts(postId)
 }
-
 -- Insert users
 -- passwords are hashed from "hashed_password"
 INSERT INTO users (username, user_password, email, first_name, last_name, is_business, created_at, updated_at)
@@ -72,15 +71,17 @@ VALUES
 (4, 'TestBio4!');
 
 -- Insert posts
-INSERT INTO post (postedBy, postText, createdAt, updatedAt)
+INSERT INTO posts (author_id, title, content, created_at, updated_at)
 VALUES
-(1, 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO tags
 VALUES
 (1,1,"wow"),
 (2,1,"cool"),
 (3,2,"cool");
+ALTER SEQUENCE user_sequence RESTART WITH 5;
+ALTER SEQUENCE post_sequence RESTART WITH 5;
