@@ -4,9 +4,6 @@ drop table if exists users cascade;
 drop table if exists connections;
 drop table if exists personal_profiles;
 
-DROP SEQUENCE IF EXISTS post_sequence;
-CREATE SEQUENCE post_sequence START WITH 1 INCREMENT BY 1;
-
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -42,13 +39,13 @@ CREATE TABLE connections (
 );
 
 CREATE TABLE posts (
-    post_id BIGINT PRIMARY KEY,
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     author_id BIGINT NOT NULL,
     title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    is_private BOOLEAN NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    content VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- Insert users
@@ -81,11 +78,13 @@ VALUES
 (1, 2),
 (2, 1);
 
--- -- Insert posts
-INSERT INTO posts (post_id, author_id, title, content, is_private, created_at, updated_at) VALUES 
-(NEXT VALUE FOR post_sequence, 1, 'User A Private Post', 'Sample post content.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(NEXT VALUE FOR post_sequence, 1, 'User A Public Post', 'Sample post content.', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(NEXT VALUE FOR post_sequence, 2, 'User B Private Post', 'Sample post content.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(NEXT VALUE FOR post_sequence, 2, 'User B Public Post', 'Sample post content.', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(NEXT VALUE FOR post_sequence, 3, 'User C Private Post', 'Sample post content.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(NEXT VALUE FOR post_sequence, 3, 'User B Public Post', 'Sample post content.', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- Insert posts
+INSERT INTO posts (author_id, title, content, is_private, created_at, updated_at)
+VALUES
+(1, 'testtitle1', 'This is the first test post.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle2', 'This is the second test post.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'testtitle3', 'Another post for testing.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle4', 'Yet another test post.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+ALTER SEQUENCE user_sequence RESTART WITH 5;
+ALTER SEQUENCE post_sequence RESTART WITH 5;
