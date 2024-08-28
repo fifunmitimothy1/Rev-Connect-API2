@@ -3,7 +3,9 @@ drop table if exists posts;
 drop table if exists users cascade;
 drop table if exists connections;
 drop table if exists personal_profiles;
--- drop table if exists post;
+
+DROP SEQUENCE IF EXISTS post_sequence;
+CREATE SEQUENCE post_sequence START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -40,11 +42,13 @@ CREATE TABLE connections (
 );
 
 CREATE TABLE posts (
-    postId INT AUTO_INCREMENT PRIMARY KEY,
-    postedBy BIGINT NOT NULL,
-    postText VARCHAR(255) NOT NULL,
-    timePostedEpoch BIGINT NOT NULL,
-    isPrivate BOOLEAN
+    post_id BIGINT PRIMARY KEY,
+    author_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    is_private BOOLEAN NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
 
 -- Insert users
@@ -78,11 +82,10 @@ VALUES
 (2, 1);
 
 -- -- Insert posts
-INSERT INTO posts (postedBy, postText, timePostedEpoch, isPrivate) 
-VALUES
-(1, 'User A Private Post', 123456789L, TRUE),
-(1, 'User A Public Post', 123456789L, FALSE),
-(2, 'User B Private Post', 123456789L, TRUE),
-(2, 'User B Public Post', 123456789L, FALSE),
-(3, 'User C Private Post', 123456789L, TRUE),
-(3, 'User C Public Post', 123456789L, FALSE);
+INSERT INTO posts (post_id, author_id, title, content, is_private, created_at, updated_at) VALUES 
+(NEXT VALUE FOR post_sequence, 1, 'User A Private Post', 'Sample post content.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(NEXT VALUE FOR post_sequence, 1, 'User A Public Post', 'Sample post content.', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(NEXT VALUE FOR post_sequence, 2, 'User B Private Post', 'Sample post content.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(NEXT VALUE FOR post_sequence, 2, 'User B Public Post', 'Sample post content.', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(NEXT VALUE FOR post_sequence, 3, 'User C Private Post', 'Sample post content.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(NEXT VALUE FOR post_sequence, 3, 'User B Public Post', 'Sample post content.', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

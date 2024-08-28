@@ -49,14 +49,13 @@ public class PostsTest {
 
     public PostsTest() {
         userA = new User(1L, "A", "","A@gmail.com", "TestUser", "A", false, LocalDateTime.now(), LocalDateTime.now(), Set.of(Role.ROLE_USER));
-          
-        Long epochTime = 123456789L;
-        userAPrivatePost = new Post(1, 1L, "User A Private Post", epochTime, true);
-        userAPublicPost = new Post(2, 1L, "User A Public Post", epochTime, false);
-        userBPrivatePost = new Post(3, 2L, "User B Private Post", epochTime, true);
-        userBPublicPost = new Post(4, 2L, "User B Public Post", epochTime, false);
-        userCPrivatePost = new Post(5, 3L, "User C Private Post", epochTime, true);
-        userCPublicPost = new Post(6, 3L, "User C Public Post", epochTime, false);
+
+        userAPrivatePost = new Post(1L, 1L, "User A Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
+        userAPublicPost = new Post(2L, 1L, "User A Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
+        userBPrivatePost = new Post(3L, 2L, "User B Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
+        userBPublicPost = new Post(4L, 2L, "User B Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
+        userCPrivatePost = new Post(5L, 3L, "User C Private Post", "Sample post content.", true, LocalDateTime.now(), LocalDateTime.now());
+        userCPublicPost = new Post(6L, 3L, "User C Public Post", "Sample post content.", false, LocalDateTime.now(), LocalDateTime.now());
     }
 
     @BeforeEach

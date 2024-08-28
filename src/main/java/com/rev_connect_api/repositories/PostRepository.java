@@ -24,7 +24,7 @@ public interface PostRepository extends JpaRepository<Post,Long>{
      * @return a list of posts which could be seen within the user's feed
      */
     @Query("SELECT p FROM Post p WHERE " +
-           "(p.isPrivate = false AND p.postedBy != :targetUserId) OR " +
-           "(p.isPrivate = true AND p.postedBy IN :userConnections)")
+           "(p.isPrivate = false AND p.authorId != :targetUserId) OR " +
+           "(p.isPrivate = true AND p.authorId IN :userConnections)")
     List<Post> findVisiblePosts(@Param("targetUserId") Long targetUserId, @Param("userConnections") List<Long> userConnections);
 }

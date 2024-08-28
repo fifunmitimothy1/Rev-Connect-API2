@@ -1,122 +1,83 @@
 package com.rev_connect_api.models;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="posts")
+@Table(name = "posts")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
-    @Column(name="postId")
-    @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer postId;
-    @Column(name="postedBy")
-    private Long postedBy;
-    @Column(name="postText")
-    private String postText;
-    @Column(name="timePostedEpoch")
-    private Long timePostedEpoch;
-    @Column(name="isPrivate")
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq")
+    @SequenceGenerator(name = "post_seq", sequenceName = "post_sequence", allocationSize = 1)
+    @Column(name = "post_id")
+    private Long postId;
+
+    @Column(name ="author_id", nullable = false)
+    private Long authorId;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+    
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
-    @Autowired
-    public Post(){
-        this.postId = 9001;
-        this.postedBy = 9001L;
-        this.postText = "default post";
-        this.timePostedEpoch = 123456789L;
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
-    public Post(Integer postId, Long postedBy, String postText, Long timePostedEpoch, Boolean isPrivate) {
-        this.postId = postId;
-        this.postedBy = postedBy;
-        this.postText = postText;
-        this.timePostedEpoch = timePostedEpoch;
-        this.isPrivate = isPrivate;
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
-    public Post(Integer postId, Long postedBy, String postText, Long timePostedEpoch) {
-        this.postId = postId;
-        this.postedBy = postedBy;
-        this.postText = postText;
-        this.timePostedEpoch = timePostedEpoch;
-    }
-    public Post(Long postedBy, String postText, Long timePostedEpoch) {
-        this.postedBy = postedBy;
-        this.postText = postText;
-        this.timePostedEpoch = timePostedEpoch;
-    }
-    public Integer getPostId() {
-        return postId;
-    }
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
-    public Long getPostedBy() {
-        return postedBy;
-    }
-    public void setPostedBy(Long postedBy) {
-        this.postedBy = postedBy;
-    }
-    public String getPostText() {
-        return postText;
-    }
-    public void setPostText(String postText) {
-        this.postText = postText;
-    }
-    public Long getTimePostedEpoch() {
-        return timePostedEpoch;
-    }
-    public void setTimePostedEpoch(Long timePostedEpoch) {
-        this.timePostedEpoch = timePostedEpoch;
-    }
+
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Post other = (Post) obj;
-		if (postId == null) {
-			if (other.postId != null)
-				return false;
-		} else if (!postId.equals(other.postId))
-			return false;
-		if (postText == null) {
-			if (other.postText != null)
-				return false;
-		} else if (!postText.equals(other.postText))
-			return false;
-		if (postedBy == null) {
-			if (other.postedBy != null)
-				return false;
-		} else if (!postedBy.equals(other.postedBy))
-			return false;
-		if (timePostedEpoch == null) {
-			if (other.timePostedEpoch != null)
-				return false;
-		} else if (!timePostedEpoch.equals(other.timePostedEpoch))
-			return false;
-		return true;
-	}
-	
-    /**
-     * Overriding the default toString() method allows for easy debugging.
-     * @return a String representation of this class.
-     */
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return Objects.equals(postId, post.postId) &&
+            Objects.equals(authorId, post.authorId) &&
+            Objects.equals(title, post.title) &&
+            Objects.equals(content, post.content) &&
+            Objects.equals(isPrivate, post.isPrivate);
+    }
+
     @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + postId +
-                ", postedBy=" + postedBy +
-                ", postText='" + postText + '\'' +
-                ", timePostedEpoch=" + timePostedEpoch +
-                '}';
+    public int hashCode() {
+        return Objects.hash(postId, authorId, title, content, isPrivate);
     }
 }
