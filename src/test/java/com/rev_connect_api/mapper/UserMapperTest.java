@@ -26,7 +26,6 @@ public class UserMapperTest {
         dto.setFirstName("Test");
         dto.setLastName("User");
         dto.setIsBusiness(false);
-        dto.setRoles(Set.of("ROLE_USER"));
 
         User user = userMapper.toEntity(dto);
 
@@ -68,7 +67,7 @@ public class UserMapperTest {
         dto.setFirstName("Updated");
         dto.setLastName("User");
         dto.setIsBusiness(true);
-        dto.setRoles(Set.of("ROLE_ADMIN"));
+        dto.setRoles(Set.of(Role.ROLE_ADMIN));
 
         User user = new User();
         user.setUsername("originaluser");
