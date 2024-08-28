@@ -101,8 +101,16 @@ public class PostService {
                 .build();
     }
 
+    /**
+     * This service funtion is to update pin value to specific post and update the post timestamp is the value is TRUE
+     * @param id
+     * @param isPinned
+     */
     public void updatePin (BigInteger id,boolean isPinned){
         Post post = getPostById(id);
+        /**
+         * After updating value of pinn, This logic will fetch the post and set timestamp of pin if it's value is TRUE or change the value to NULL if pin value is FALSE.
+         */
         if(isPinned == true) {
             post.setPinnedAt(timestampUtil.getCurrentTimestamp());
         } else {

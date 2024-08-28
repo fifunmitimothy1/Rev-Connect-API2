@@ -97,6 +97,14 @@ public class PostController {
         return ResponseEntity.ok(media);
     }
 
+    /**
+     * This API is for making post pinned so can be shows on user profile on top of feeds.
+     * This API endpoint is api/post/pin/{id}
+     * This API update the value of isPinned with TRUE or FALSE and changes nothing else.
+     * @param id - pass post id to make changes
+     * @param isPinned - value of pin in boolean
+     * @return - returns the response status.
+     */
     @PostMapping("/pin/{id}")
     public ResponseEntity UpdatePin(@PathVariable BigInteger id, @RequestParam("isPinned") Boolean isPinned) {
         postService.updatePin(id,isPinned);

@@ -197,4 +197,57 @@ public class PostControllerTest {
                 file.getName(), file.getName(), "image/jpeg", input
         );
     }
+    
+
+    /**
+     * This test case checks if updatePin API is working as expected.
+     * As it needs to change isPinned value only Nothing more than that.
+     */
+    @Test
+    @DirtiesContext
+    public void TestUpdatePin() {
+        final BigInteger id = new BigInteger("1");
+        String title = "title test";
+        String content = "content test";
+        Boolean isPinned = false;
+
+        // Create post
+        PostCreateRequest postRequest = new PostCreateRequest(title, content, isPinned);
+        postController.CreatePost(title, content, null, isPinned);
+
+        /**
+         * Check tet cae for updating piv value to FALSE
+         */
+        ResponseEntity response = postController.UpdatePin(id,isPinned);
+        response = postController.GetPostById(id);
+        Post postResponse = (Post) response.getBody();
+        assertEqualsPost(postRequest, postResponse);
+
+        /**
+         * Check tet cae for updating piv value to TRUE
+         */
+        title = "title test";
+        content = "content test";
+        isPinned = true;
+        PostCreateRequest postRequestTrue = new PostCreateRequest(title, content, isPinned);
+
+        ResponseEntity responseTrue = postController.UpdatePin(id,isPinned);
+        responseTrue = postController.GetPostById(id);
+        Post postResponseTrue = (Post) responseTrue.getBody();
+        assertEqualsPost(postRequestTrue, postResponseTrue);
+
+        /**
+         * Check tet cae for updating piv value to FALSE
+         */
+        title = "title test";
+        content = "content test";
+        isPinned = false;
+        PostCreateRequest postRequestFalse = new PostCreateRequest(title, content, isPinned);
+
+        ResponseEntity responseFalse = postController.UpdatePin(id,isPinned);
+        responseFalse = postController.GetPostById(id);
+        Post postResponseFalse = (Post) responseFalse.getBody();
+        assertEqualsPost(postRequestFalse, postResponseFalse);
+
+    }
 }
