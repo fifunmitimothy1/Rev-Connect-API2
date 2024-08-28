@@ -5,7 +5,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.rev_connect_api.dto.UserRegistrationDTO;
 import com.rev_connect_api.dto.UserResponseDTO;
@@ -96,4 +106,28 @@ public class UserController {
 
         return responseDTO;
     }
+  
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> login(@RequestParam String userName, @RequestParam String password) {
+        User user = userService.findUserByUsername(userName);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (encoder.matches(password, user.getPassword())) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+        
+    }
+    @PutMapping("/reset-password")
+    public String resetPass(@RequestParam String token, @RequestParam String password) {
+        // Encrypt the new password
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return userService.resetPass(token, encoder.encode(password));
+}
+
+
 }
