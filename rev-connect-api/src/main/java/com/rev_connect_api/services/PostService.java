@@ -102,6 +102,12 @@ public class PostService {
     }
 
     public void updatePin (BigInteger id,boolean isPinned){
+        Post post = getPostById(id);
+        if(isPinned == true) {
+            post.setPinnedAt(timestampUtil.getCurrentTimestamp());
+        } else {
+            post.setPinnedAt(null);
+        }
         postRepository.updatePin(id, isPinned);
     }
 }
