@@ -41,10 +41,10 @@ public interface UserMapper {
     void updateUserFromDTO(UserUpdateDTO dto, @MappingTarget User user);
     
     // Convert a Set of role strings to a Set of Role enums
-    default Set<Role> mapRoles(Set<String> roles) {
+    default Set<Role> mapRoles(Set<Role> roles) {
         if (roles == null || roles.isEmpty()) {
             return Set.of(Role.ROLE_USER); // Default role ROLE_USER if no roles are provided
         }
-        return roles.stream().map(Role::valueOf).collect(Collectors.toSet());
+        return roles;
     }
 }
