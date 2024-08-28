@@ -26,56 +26,58 @@ import com.rev_connect_api.services.EndorsementLinkService;
  */
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/endorsement_links")
+@RequestMapping("/endorsement_links")
 public class EndorsementLinkController {
 
-  @Autowired
-  private EndorsementLinkService endorsementLinkService;
+    @Autowired
+    private EndorsementLinkService endorsementLinkService;
 
-  ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
-  /**
-   * The handler for the POST request to create an endorsement link
-   */
-  @PostMapping
-  public ResponseEntity<EndorsementLink> createEndorsementLink(@RequestBody String endorsementLinkString) throws JsonProcessingException, JsonMappingException{
-      EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
-      EndorsementLink createdEndorsementLink = endorsementLinkService.createEndorsementLink(
-          endorsementLink.getUser(),
-          endorsementLink.getLink(),
-          endorsementLink.getLinkText());
-      return ResponseEntity.ok(createdEndorsementLink);
-  }
+    /**
+     * The handler for the POST request to create an endorsement link
+     */
+    @PostMapping
+    public ResponseEntity<EndorsementLink> createEndorsementLink(@RequestBody String endorsementLinkString)
+            throws JsonProcessingException, JsonMappingException {
+        EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
+        EndorsementLink createdEndorsementLink = endorsementLinkService.createEndorsementLink(
+                endorsementLink.getUser(),
+                endorsementLink.getLink(),
+                endorsementLink.getLinkText());
+        return ResponseEntity.ok(createdEndorsementLink);
+    }
 
-  /**
-   * The handler for the GET request to retrieve endorsement links by user id
-   */
-  @GetMapping
-  public ResponseEntity<List<EndorsementLink>> getEndorsementLinksByUserId(@RequestParam Long userId) {
-      List<EndorsementLink> endorsementLinks = endorsementLinkService.getEndorsementLinksByUserId(userId);
-      return ResponseEntity.ok(endorsementLinks);
-  }
+    /**
+     * The handler for the GET request to retrieve endorsement links by user id
+     */
+    @GetMapping
+    public ResponseEntity<List<EndorsementLink>> getEndorsementLinksByUserId(@RequestParam Long userId) {
+        List<EndorsementLink> endorsementLinks = endorsementLinkService.getEndorsementLinksByUserId(userId);
+        return ResponseEntity.ok(endorsementLinks);
+    }
 
-  /**
-   * The handler for the PATCH request to update an endorsement link
-   */
-  @PatchMapping
-  public ResponseEntity<EndorsementLink> updateEndorsementLink(@RequestBody String endorsementLinkString) throws JsonProcessingException, JsonMappingException{
-      EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
-      EndorsementLink updatedEndorsementLink = endorsementLinkService.updateEndorsementLink(
-          endorsementLink.getId(),
-          endorsementLink.getUser(),
-          endorsementLink.getLink(),
-          endorsementLink.getLinkText());
-      return ResponseEntity.ok(updatedEndorsementLink);
-  }
+    /**
+     * The handler for the PATCH request to update an endorsement link
+     */
+    @PatchMapping
+    public ResponseEntity<EndorsementLink> updateEndorsementLink(@RequestBody String endorsementLinkString)
+            throws JsonProcessingException, JsonMappingException {
+        EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
+        EndorsementLink updatedEndorsementLink = endorsementLinkService.updateEndorsementLink(
+                endorsementLink.getId(),
+                endorsementLink.getUser(),
+                endorsementLink.getLink(),
+                endorsementLink.getLinkText());
+        return ResponseEntity.ok(updatedEndorsementLink);
+    }
 
-  /**
-   * The handler for the DELETE request to delete an endorsement link
-   */
-  @DeleteMapping
-  public ResponseEntity<Void> deleteEndorsementLink(@RequestParam Long endorsementLinkId) {
-      endorsementLinkService.deleteEndorsementLink(endorsementLinkId);
-      return ResponseEntity.noContent().build();
-  }
+    /**
+     * The handler for the DELETE request to delete an endorsement link
+     */
+    @DeleteMapping
+    public ResponseEntity<Void> deleteEndorsementLink(@RequestParam Long endorsementLinkId) {
+        endorsementLinkService.deleteEndorsementLink(endorsementLinkId);
+        return ResponseEntity.noContent().build();
+    }
 }

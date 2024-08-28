@@ -11,7 +11,8 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/partner_channels")
+@CrossOrigin(origins = "*")
+@RequestMapping("/partner_channels")
 public class PartnerChannelController {
 
   @Autowired
