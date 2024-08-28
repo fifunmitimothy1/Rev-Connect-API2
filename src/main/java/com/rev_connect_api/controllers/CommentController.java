@@ -28,6 +28,7 @@ public class CommentController {
 
     /**
      * Retrieves a list of comments for a specific post.
+     *
      * @param postId The ID of the post for which comments are being fetched.
      * @param userId Optional query parameter to filter comments by user ID.
      * @return A ResponseEntity containing a list of CommentResponse objects and HTTP status.
