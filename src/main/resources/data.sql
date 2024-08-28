@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS business_profile;
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS personal_profiles;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS post cascade;
 
 -- Creating the 'users' table
 CREATE TABLE users (
@@ -41,6 +42,17 @@ CREATE TABLE personal_profiles (
     user_id BIGINT UNIQUE,
     bio VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Creating the 'posts' table
+CREATE TABLE posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    author_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- Creating the 'endorsement_links' table
@@ -93,6 +105,18 @@ VALUES
 (2, 'TestBio2!'),
 (3, 'TestBio3!'),
 (4, 'TestBio4!');
+
+-- Insert posts
+INSERT INTO posts (author_id, title, content, created_at, updated_at)
+VALUES
+(1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+ALTER SEQUENCE user_sequence RESTART WITH 5;
+ALTER SEQUENCE post_sequence RESTART WITH 5;
 
 -- Inserting sample data into 'endorsement_links'
 INSERT INTO endorsement_links (user_id, link, link_text)

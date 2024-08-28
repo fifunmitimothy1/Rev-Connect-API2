@@ -16,6 +16,7 @@ import com.rev_connect_api.exceptions.InvalidProfileException;
 import com.rev_connect_api.exceptions.InvalidUserException;
 import com.rev_connect_api.models.FieldErrorResponse;
 import com.rev_connect_api.models.PersonalProfile;
+import com.rev_connect_api.security.Principal;
 import com.rev_connect_api.services.ProfileService;
 
 @RestController
@@ -43,7 +44,7 @@ public class ProfileController {
   @PutMapping()
   public ResponseEntity<Object> updateProfile(@RequestBody PersonalProfile profile) {
     PersonalProfile result;
-    profile.getUser().setUsername((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    profile.getUser().setUsername(((Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
     try {
       result = profileService.updateProfile(profile);
       return ResponseEntity.status(HttpStatus.OK).body(result);
