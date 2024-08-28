@@ -78,8 +78,8 @@ public class PostService {
     }
 
     @Transactional
-    public boolean deletePostById(BigInteger id) {
-        Post post = getPostById(id);
+    public <T> boolean deletePostById(BigInteger id) {
+        T post = getPostById(id);
         if(post == null) {
             return false;
         }

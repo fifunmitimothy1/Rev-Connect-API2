@@ -246,6 +246,24 @@ public class PostControllerTest {
         assertNotNull(postResponse.getUpdatedAt());
     }
 
+    @Test
+    @DirtiesContext
+    public void TestDeleteSponsoredPost() {
+        final BigInteger id = new BigInteger("1");
+
+        // Creates a post
+        SponsoredPostCreateRequest postRequest = new SponsoredPostCreateRequest("title", "content", "sponsor");
+        postController.CreateSponsoredPost(postRequest.getTitle(), postRequest.getContent(), null, postRequest.getSponsor());
+
+        // Delete a post, controller should return true if successfully deleted
+        ResponseEntity<Boolean> response = postController.DeletePostById(id);
+        assertEquals(true, response.getBody());
+
+        // Try to delete the same post again, false should be returned as that post was already deleted and thus cannot be found
+        response = postController.DeletePostById(id);
+        assertEquals(false, response.getBody());
+    }
+
     // Verifies if the request content of post is equal to the post from response body
     private void assertEqualsPost(SponsoredPostCreateRequest postRequest, SponsoredPost post) {
         assertEquals(postRequest.getTitle(), post.getTitle());
