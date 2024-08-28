@@ -3,7 +3,10 @@ package com.rev_connect_api.services;
 import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.PostRepository;
+import com.rev_connect_api.repositories.FollowRepository;
+import com.rev_connect_api.repositories.UserRepository;
 import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +26,8 @@ public class PostService {
 
     private static final int MAX_POST_PER_PAGE = 5;
 
+    private final UserRepository userRepository;
+    private final followRepository followRepository;
     private final PostRepository postRepository;
     private final MediaService mediaService;
     private final TimestampUtil timestampUtil;
@@ -53,9 +58,11 @@ public class PostService {
         return post.get();
     }
 
-    public List<Post> getRecentPosts(int page) {
+    public List<Post> getRecentPosts(int page, String username) {
         Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE);
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        User user = userRepository.findByUsername(username);
+        List<User> followingList = followRepository.findUsersWhoUserFollows(user);
+        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable, followingList);
         return posts;
     }
 

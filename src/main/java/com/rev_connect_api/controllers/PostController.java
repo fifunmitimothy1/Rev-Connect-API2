@@ -68,7 +68,8 @@ public class PostController {
 
     @GetMapping()
     public ResponseEntity<List<Post>> GetRecentPosts(@RequestParam int page) {
-        List<Post> posts = postService.getRecentPosts(page);
+        Principal principal = (Principal) auth.getPrincipal();
+        List<Post> posts = postService.getRecentPosts(page, principal.getUsername());
         return ResponseEntity.ok(posts);
     }
 
