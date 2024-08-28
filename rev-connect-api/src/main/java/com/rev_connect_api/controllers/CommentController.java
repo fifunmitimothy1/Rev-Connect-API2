@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/post")
 @CrossOrigin(origins = "*") // Apply CORS configuration at the class level
 public class CommentController {
+
     private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
     private final CommentService commentService;
 
@@ -25,6 +26,12 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    /**
+     * Retrieves a list of comments for a specific post.
+     * @param postId The ID of the post for which comments are being fetched.
+     * @param userId Optional query parameter to filter comments by user ID.
+     * @return A ResponseEntity containing a list of CommentResponse objects and HTTP status.
+     */
     @GetMapping("/{postId}/comment")
     public ResponseEntity<List<CommentResponse>> getCommentsForPost(
             @PathVariable long postId,
@@ -32,29 +39,40 @@ public class CommentController {
     ) {
         try {
             List<Comment> commentsForPost;
+            // Fetch comments based on presence of userId
             if (userId != null) {
                 commentsForPost = commentService.getCommentForPost(userId, postId);
             } else {
                 commentsForPost = commentService.getAllCommentsByPostId(postId);
             }
+            // Prepare CommentResponse objects with likes count
             List<CommentResponse> responses = new ArrayList<>();
             for (Comment comment : commentsForPost) {
                 long likesCount = commentService.getLikesCountForComment(comment.getCommentId());
                 responses.add(new CommentResponse(comment, likesCount));
             }
+            // Return comments with HTTP status OK
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
+            // Log error and return internal server error status
             logger.error("An error occurred while fetching comments for post {}", postId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * Creates a new comment.
+     * @param comment The Comment object to be created.
+     * @return A ResponseEntity containing the created Comment object and HTTP status.
+     */
     @PostMapping("/comment")
     public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
         try {
+            // Create and return the new comment with HTTP status CREATED
             Comment createdComment = commentService.createComment(comment);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
         } catch (Exception e) {
+            // Log error and return bad request status
             logger.error("An error occurred while creating comment", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
