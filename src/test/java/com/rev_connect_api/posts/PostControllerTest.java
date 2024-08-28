@@ -1,41 +1,33 @@
 package com.rev_connect_api.posts;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.controllers.PostController;
-import com.rev_connect_api.dto.PostCreateRequest;
-import com.rev_connect_api.models.Media;
-import com.rev_connect_api.models.Post;
-import com.rev_connect_api.repositories.MediaRepository;
-import com.rev_connect_api.repositories.PostRepository;
+import com.rev_connect_api.dto.PostRequestDTO;
+import com.rev_connect_api.dto.PostResponseDTO;
 import com.rev_connect_api.security.Principal;
 import com.rev_connect_api.services.MediaService;
+import com.rev_connect_api.services.PostService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@SpringBootTest
+import org.springframework.test.web.servlet.MockMvc;
+import java.util.Collections;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@SpringBootTest()
+@AutoConfigureMockMvc(addFilters = false) // Disable security filters if applicable
 public class PostControllerTest {
 
     @Autowired
@@ -43,16 +35,90 @@ public class PostControllerTest {
     @Autowired
     private MediaService mediaService;
 
+    @Autowired
+    private MockMvc mockMvc;
+    
+    @MockBean
+    private PostService postService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private PostRequestDTO postRequestDTO;
+    private PostResponseDTO postResponseDTO;
+
     private final static Long USER_ID = 1L;
 
     @BeforeEach
     void setup() {
-        Principal principal = new Principal(USER_ID, "user");
-        UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(principal, null, null);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        postRequestDTO = new PostRequestDTO();
+        postRequestDTO.setAuthorId(1L);
+        postRequestDTO.setTitle("Test Title");
+        postRequestDTO.setContent("Test Content");
+
+        postResponseDTO = new PostResponseDTO();
+        postResponseDTO.setPostId(1L);
+        postResponseDTO.setAuthorId(1L);
+        postResponseDTO.setTitle("Test Title");
+        postResponseDTO.setContent("Test Content");
+
+        // Principal principal = new Principal(USER_ID, "user");
+        // UsernamePasswordAuthenticationToken auth =
+        //         new UsernamePasswordAuthenticationToken(principal, null, null);
+        // SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+    
+    @Test
+    void createPost_Success() throws Exception {
+        when(postService.savePost(any(PostRequestDTO.class))).thenReturn(postResponseDTO);
+
+        mockMvc.perform(post("/posts")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(postRequestDTO)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.postId").value(postResponseDTO.getPostId()))
+            .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()));
+    }
+    
+    @Test
+    void getPostById_Success() throws Exception {
+        when(postService.getPostById(1L)).thenReturn(postResponseDTO);
+
+        mockMvc.perform(get("/posts/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.postId").value(postResponseDTO.getPostId()))
+                .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()));
     }
 
+    @Test
+    void getAllPosts_Success() throws Exception {
+        when(postService.getAllPosts()).thenReturn(Collections.singletonList(postResponseDTO));
+
+        mockMvc.perform(get("/posts")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].postId").value(postResponseDTO.getPostId()));
+    }
+
+    @Test
+    void updatePost_Success() throws Exception {
+        when(postService.updatePost(anyLong(), any(PostRequestDTO.class))).thenReturn(postResponseDTO);
+
+        mockMvc.perform(put("/posts/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.postId").value(postResponseDTO.getPostId()))
+                .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()));
+    }
+
+    @Test
+    void deletePost_Success() throws Exception {
+        mockMvc.perform(delete("/posts/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
     // @Test
     // @DirtiesContext // Ensures each test do not share state or data with each other
     // public void TestCreatePost() {
@@ -110,20 +176,20 @@ public class PostControllerTest {
     //     assertTrue(deletedMedia);
     // }
 
-    @Test
-    @DirtiesContext
-    public void TestDeletePost() {
-        final Long id = 1L;
+    // @Test
+    // @DirtiesContext
+    // public void TestDeletePost() {
+    //     final Long id = 1L;
 
-        Post postRequest = new Post();
-        postRequest.setTitle("title");
-        postRequest.setContent("content");
-        postController.createPost(postRequest);
+    //     Post postRequest = new Post();
+    //     postRequest.setTitle("title");
+    //     postRequest.setContent("content");
+    //     postController.createPost(postRequest);
 
-        // Delete a post, controller should return true if successfully deleted
-        ResponseEntity<Boolean> deleteResponse = postController.deletePostById(id);
-        assertEquals(true, deleteResponse.getBody());
-    }
+    //     // Delete a post, controller should return true if successfully deleted
+    //     ResponseEntity<Boolean> deleteResponse = postController.deletePostById(id);
+    //     assertEquals(true, deleteResponse.getBody());
+    // }
 
     // This test should test both the update and get operation
     // @Test

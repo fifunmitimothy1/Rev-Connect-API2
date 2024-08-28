@@ -74,7 +74,7 @@ public class PostController {
        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping("/recent")
     public ResponseEntity<List<PostResponseDTO>> getRecentPosts(@RequestParam int page) {
         List<PostResponseDTO> posts = postService.getRecentPosts(page);
         return new ResponseEntity<>(posts, HttpStatus.OK);
