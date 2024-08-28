@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,9 +24,9 @@ public class FollowRecommendationService {
     private UserRepository userRepository;
 
     // Main method to recommend users to follow for the given user
-    public List<User> recommendUsersToFollow(User currentUser) {
+    public List<User> recommendUsersToFollow(Optional<User> currentUser) {
         // Fetches the list of users that the current user is already following
-        Set<User> following = currentUser.getFollowing();
+        Set<User> following = currentUser.orElseThrow().getFollowing();
 
         // Fetches all users from the database, filters out those already followed by the current user and the current user themselves
         List<User> allUsers = userRepository.findAll();
@@ -50,7 +51,7 @@ public class FollowRecommendationService {
     }
 
     // Method to calculate the overall similarity score between the current user and another user
-    private double calculateSimilarityScore(User currentUser, User otherUser) {
+    private double calculateSimilarityScore(Optional<User> currentUser, User otherUser) {
         // Calculates similarity based on the posts liked by both users
         double postSimilarity = calculatePostSimilarity(currentUser, otherUser);
 
@@ -62,8 +63,8 @@ public class FollowRecommendationService {
     }
 
     // Method to calculate similarity based on liked posts using Jaccard similarity
-    private double calculatePostSimilarity(User currentUser, User otherUser) {
-        Set<Post> currentUserPosts = currentUser.getLikedPosts();  // Posts liked by the current user
+    private double calculatePostSimilarity(Optional<User> currentUser, User otherUser) {
+        Set<Post> currentUserPosts = currentUser.orElseThrow().getLikedPosts();  // Posts liked by the current user
         Set<Post> otherUserPosts = otherUser.getLikedPosts();      // Posts liked by the other user
 
         // Creates an intersection set of posts liked by both users
@@ -79,8 +80,8 @@ public class FollowRecommendationService {
     }
 
     // Method to calculate similarity based on followed hashtags using Jaccard similarity
-    private double calculateHashtagSimilarity(User currentUser, User otherUser) {
-        Set<Hashtag> currentUserHashtags = currentUser.getFollowedHashtags();  // Hashtags followed by the current user
+    private double calculateHashtagSimilarity(Optional<User> currentUser, User otherUser) {
+        Set<Hashtag> currentUserHashtags = currentUser.orElseThrow().getFollowedHashtags();  // Hashtags followed by the current user
         Set<Hashtag> otherUserHashtags = otherUser.getFollowedHashtags();      // Hashtags followed by the other user
 
         // Creates an intersection set of hashtags followed by both users
