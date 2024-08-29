@@ -2,6 +2,8 @@ package com.rev_connect_api.dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rev_connect_api.models.Role;
 
 import jakarta.validation.constraints.Email;
@@ -31,9 +33,11 @@ public class UserRegistrationDTO {
     private String lastName;
     
     private Boolean isBusiness = false;
-
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     private Set<Role> roles = Set.of(Role.ROLE_USER); // List of roles as strings (e.g., "ROLE_USER", "ROLE_ADMIN")
