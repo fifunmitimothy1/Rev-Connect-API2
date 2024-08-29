@@ -1,2 +1,2 @@
 # Rev-Connect-API
-Spring service for Rec Connect application
+Spring service for Rev Connect application

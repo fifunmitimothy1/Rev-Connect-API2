@@ -1,11 +1,9 @@
+/.metadata/
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
-## Attachments
-/rev-connect-api/src/main/resources/public/attachments/**
 
 ### STS ###
 .apt_generated
@@ -17,11 +15,11 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-*.idea
+.idea
 *.iws
 *.iml
 *.ipr
-*.project
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -32,9 +30,5 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-
 ### VS Code ###
-**/.vscode/
-
-### mvn ###
-/.mvn/wrapper/maven-wrapper.properties
+.vscode/

@@ -3,7 +3,6 @@ package com.rev_connect_api.services;
 import com.rev_connect_api.enums.MediaType;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.repositories.MediaRepository;
-import com.rev_connect_api.util.TimestampUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,10 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service
 public class MediaService {
@@ -34,7 +32,7 @@ public class MediaService {
 
     // The method to save the actual Media entity to database
     @Transactional
-    public Media saveMedia(MultipartFile file, BigInteger postId, Timestamp createdAt) {
+    public Media saveMedia(MultipartFile file, Long postId, LocalDateTime createdAt) {
         String path;
         try {
             path = saveFile(file);
@@ -51,12 +49,12 @@ public class MediaService {
         return mediaRepository.save(media);
     }
 
-    public List<Media> getMediaByPostId(BigInteger postId) {
+    public List<Media> getMediaByPostId(Long postId) {
         return mediaRepository.findAllByPostId(postId);
     }
 
     @Transactional
-    public boolean deleteMediaByPostId(BigInteger postId) {
+    public boolean deleteMediaByPostId(Long postId) {
     List<Media> mediaList = getMediaByPostId(postId);
     if (mediaList == null || mediaList.isEmpty()) {
         return false;
@@ -76,7 +74,6 @@ public class MediaService {
     mediaRepository.deleteMediaByPostId(postId);
     return true;
     }
-
 
     // Saves attachments locally, should probably switch out implementation in production
     private String saveFile(MultipartFile file) throws IOException {

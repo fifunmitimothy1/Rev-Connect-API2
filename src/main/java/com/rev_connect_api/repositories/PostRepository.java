@@ -5,16 +5,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, BigInteger> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
-    boolean existsByPostId(BigInteger postId);
-    Optional<Post> getPostByPostId(BigInteger id);
 
-    void deletePostByPostId(BigInteger id);
+    Optional<Post> getPostByPostId(Long id);
+
+    List<Post> findByAuthorId(Long authorId);
 }
