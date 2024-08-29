@@ -10,10 +10,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
@@ -36,8 +33,13 @@ public class Post {
     
     @Column(name = "content", nullable = false)
     private String content;
-    @OneToMany(mappedBy = "post", fetch=FetchType.LAZY,  cascade = CascadeType.REMOVE)
-    private List<Tag> tags = new ArrayList<>();
+    
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

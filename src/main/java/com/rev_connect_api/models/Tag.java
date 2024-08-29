@@ -1,14 +1,9 @@
 package com.rev_connect_api.models;
 
-import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,9 +15,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private BigInteger tagId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private BigInteger postId;
-    private String tagString;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<Post> posts = new HashSet<>();
 }

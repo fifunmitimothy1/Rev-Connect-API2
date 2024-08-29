@@ -87,17 +87,17 @@ public class PostController {
     }
 
     //could be combined with GetRecentPosts, but this seems easier for merging
-    @GetMapping()
-    public ResponseEntity<List<Post>> GetPostsFilterByTag(@RequestParam int page, @RequestParam String tag) {
-        List<Post> posts = postService.getRecentPostsByTag(page, tag);
+    @GetMapping("/by-tag/")
+    public ResponseEntity<List<PostResponseDTO>> GetPostsFilterByTag(@RequestParam int page, @RequestParam String tag) {
+        List<PostResponseDTO> posts = postService.getRecentPostsByTag(page, tag);
         return ResponseEntity.ok(posts);
     }
 
     // //not sure if I should just alter the GetRecentPosts handler, but this seems easier to merge
     // //TODO: uncomment and refactor once follower implementation is merged
-    // @GetMapping()
-    // public ResponseEntity<List<Post>> GetPostsFilterByFollowing(@RequestParam int page, @RequestParam Boolean byFollowing, @RequestParam BigInteger followerId) {
-    //     List<Post> posts;
+    // @GetMapping("/by-follows/")
+    // public ResponseEntity<List<PostResponseDTO>> GetPostsFilterByFollowing(@RequestParam int page, @RequestParam Long followerId) {
+    //     List<PostResponseDTO> posts;
     //     if(byFollowing){
     //         posts = postService.getRecentPostsByFollowing(page, followerId);
     //     }

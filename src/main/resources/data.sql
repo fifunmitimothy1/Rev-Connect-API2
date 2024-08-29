@@ -2,7 +2,6 @@ drop table if exists user_roles;
 drop table if exists users cascade;
 drop table if exists personal_profiles;
 drop table if exists posts cascade;
-drop table if exists tags;
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -39,12 +38,7 @@ CREATE TABLE posts (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
-CREATE TABLE tags{
-    tagId BIGINT AUTO_INCREMENT PRIMARY KEY,
-    postId BIGINT,
-    tagString VARCHAR(255),
-    FOREIGN KEY (postId) references posts(postId)
-}
+
 -- Insert users
 -- passwords are hashed from "hashed_password"
 INSERT INTO users (username, user_password, email, first_name, last_name, is_business, created_at, updated_at)
@@ -78,10 +72,5 @@ VALUES
 (2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 (1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO tags
-VALUES
-(1,1,"wow"),
-(2,1,"cool"),
-(3,2,"cool");
 ALTER SEQUENCE user_sequence RESTART WITH 5;
 ALTER SEQUENCE post_sequence RESTART WITH 5;

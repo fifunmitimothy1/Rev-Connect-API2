@@ -92,18 +92,22 @@ public class PostService {
         return response;
     }
 
-    public List<Post> getRecentPostsByTag(int page, String tag) {
+    public List<PostResponseDTO> getRecentPostsByTag(int page, String tag) {
         Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE, Sort.by("createdAt").descending());
-        List<Post> posts = postRepository.findAllByTag(tag, pageable);
-        return posts;
+        List<PostResponseDTO> response = postRepository.findAllByTagName(tag, pageable).stream()
+            .map(postMapper::toPostResponseDTO)
+            .collect(Collectors.toList());
+        return response;
     }
 
     // //page variable determines which page of results is requested
     // //TODO: uncomment and refactor once Followers implementation is merged
-    // public List<Post> getRecentPostsByFollowing(int page, BigInteger userId) {
+    // public List<Post> getRecentPostsByFollowing(int page, Long userId) {
     //     Pageable pageable = PageRequest.of(page, MAX_POST_PER_PAGE, Sort.by("createdAt").descending());
-    //     List<Post> posts = postRepository.findAllByUsersFollows(userId, pageable);
-    //     return posts;
+    //     List<Post> response = postRepository.findAllByUsersFollows(userId, pageable).stream()
+    //         .map()
+    //         .collect(Collectors.toList());
+    //     return response;
     // }
 
     @Transactional
