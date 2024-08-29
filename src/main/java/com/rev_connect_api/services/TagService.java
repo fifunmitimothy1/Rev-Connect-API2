@@ -29,7 +29,7 @@ public class TagService {
         Optional<Tag> existingTag = tagRepository.findByTagName(tagName);
         Tag newTag = new Tag();
         newTag.setTagName(tagName);
-        return existingTag.orElseGet(() -> tagRepository.save(newTag));
+        return existingTag.orElseGet(() -> tagRepository.saveAndFlush(newTag));
     }
 
     @Transactional
