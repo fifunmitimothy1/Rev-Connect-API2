@@ -2,23 +2,28 @@ package com.rev_connect_api.models;
 
 import com.rev_connect_api.enums.MediaType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+@Data
 @Entity
+@Table
+@NoArgsConstructor
+@AllArgsConstructor
 public class Media {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private BigInteger mediaId;
-    private BigInteger postId;
+    private Long mediaId;
+    private Long postId;
     private String mediaUrl;
     @Enumerated(EnumType.STRING)
     private MediaType mediaType;
-    private Timestamp createdAt;
-
-    public Media() {}
+    private LocalDateTime createdAt;
 
     private Media(Builder builder) {
         setMediaId(builder.mediaId);
@@ -32,62 +37,22 @@ public class Media {
         return new Builder();
     }
 
-    public BigInteger getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(BigInteger mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public BigInteger getPostId() {
-        return postId;
-    }
-
-    public void setPostId(BigInteger postId) {
-        this.postId = postId;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(MediaType mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public static final class Builder {
-        private BigInteger mediaId;
-        private BigInteger postId;
+        private Long mediaId;
+        private Long postId;
         private String mediaUrl;
         private MediaType mediaType;
-        private Timestamp createdAt;
+        private LocalDateTime createdAt;
 
         private Builder() {
         }
 
-        public Builder mediaId(BigInteger val) {
+        public Builder mediaId(Long val) {
             mediaId = val;
             return this;
         }
 
-        public Builder postId(BigInteger val) {
+        public Builder postId(Long val) {
             postId = val;
             return this;
         }
@@ -102,7 +67,7 @@ public class Media {
             return this;
         }
 
-        public Builder createdAt(Timestamp val) {
+        public Builder createdAt(LocalDateTime val) {
             createdAt = val;
             return this;
         }

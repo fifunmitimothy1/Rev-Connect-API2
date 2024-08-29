@@ -1,0 +1,18 @@
+package com.rev_connect_api.dto;
+
+import java.time.LocalDateTime;
+
+import lombok.Data;
+
+@Data
+public class PostResponseDTO {
+
+    private Long postId;
+    private Long authorId;
+    private String title;
+    private String content; 
+    private String isPinned;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime isPinnedAt;
+}

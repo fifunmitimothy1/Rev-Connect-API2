@@ -1,11 +1,9 @@
+/.metadata/
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
-## Attachments
-/rev-connect-api/src/main/resources/public/attachments/**
 
 ### STS ###
 .apt_generated
