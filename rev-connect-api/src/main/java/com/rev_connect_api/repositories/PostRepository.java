@@ -28,4 +28,5 @@ public interface PostRepository extends JpaRepository<Post, BigInteger> {
     @Transactional
     @Query(value = "UPDATE posts p SET p.isPinned = :isPinned WHERE postId = :id", nativeQuery = true)
     void updatePin(BigInteger id,boolean isPinned);
+    
 }

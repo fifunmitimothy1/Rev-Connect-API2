@@ -3,7 +3,6 @@ package com.rev_connect_api.services;
 import com.rev_connect_api.enums.MediaType;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.repositories.MediaRepository;
-import com.rev_connect_api.util.TimestampUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +16,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

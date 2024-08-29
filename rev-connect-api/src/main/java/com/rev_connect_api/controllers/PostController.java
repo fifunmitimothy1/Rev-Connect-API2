@@ -7,17 +7,11 @@ import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
 import com.rev_connect_api.util.TimestampUtil;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController

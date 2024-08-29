@@ -5,30 +5,20 @@ import com.rev_connect_api.controllers.PostController;
 import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
-import com.rev_connect_api.repositories.MediaRepository;
-import com.rev_connect_api.repositories.PostRepository;
 import com.rev_connect_api.services.MediaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -215,6 +205,7 @@ public class PostControllerTest {
         PostCreateRequest postRequest = new PostCreateRequest(title, content, isPinned);
         postController.CreatePost(title, content, null, isPinned);
 
+        
         /**
          * Check tet cae for updating piv value to FALSE
          */
