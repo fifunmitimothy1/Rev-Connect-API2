@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.rev_connect_api.dto.UserRegistrationDTO;
 import com.rev_connect_api.dto.UserResponseDTO;
+import com.rev_connect_api.dto.UserSearchResultDTO;
 import com.rev_connect_api.dto.UserUpdateDTO;
 import com.rev_connect_api.mapper.UserMapper;
 import com.rev_connect_api.models.Role;
@@ -23,11 +24,18 @@ public class UserService {
     private UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    @Autowired
+    private ConnectionRequestService connectionRequestService;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     // find a user by username
@@ -104,8 +112,24 @@ public class UserService {
     }
 
     public UserResponseDTO findUserById(Long id) {
-       User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         return userMapper.toDTO(user);
-   }
+    }
+   
+    public List<User> searchUsersByUsernameStartingWith(String query) {
+        return userRepository.searchUsersByUsernameStartingWith(query);
+    }
+
+    public List<UserSearchResultDTO> searchUsersWithConditions(String query, Long currentUserId) {
+        List<User> users = userRepository.searchUsersByUsernameStartingWith(query);
+
+        return users.stream().map(user -> {
+            boolean isSameUser = user.getUserId().equals(currentUserId);
+            boolean hasPendingRequest = connectionRequestService.hasPendingRequest(currentUserId, user.getUserId())
+                    || connectionRequestService.hasPendingRequest(user.getUserId(), currentUserId);
+
+            return new UserSearchResultDTO(user.getUserId(), user.getUsername(), isSameUser, hasPendingRequest);
+        }).collect(Collectors.toList());
+    }
 }
