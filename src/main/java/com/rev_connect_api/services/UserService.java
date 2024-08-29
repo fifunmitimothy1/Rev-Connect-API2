@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,18 @@ import com.rev_connect_api.dto.UserRegistrationDTO;
 import com.rev_connect_api.dto.UserResponseDTO;
 import com.rev_connect_api.dto.UserUpdateDTO;
 import com.rev_connect_api.mapper.UserMapper;
+import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.models.Role;
 import com.rev_connect_api.models.User;
+import com.rev_connect_api.repositories.ProfileRepository;
 import com.rev_connect_api.repositories.UserRepository;
 
 @Service
 public class UserService {
+
+    //temp fix for dry run
+    @Autowired 
+    private ProfileRepository profileRepository;
 
     private UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,6 +53,7 @@ public class UserService {
         String emailId = userRegistrationDTO.getEmail();
         List<User> checkDuplicates = getUserDetails(username,emailId);
 
+
         if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
 
@@ -61,6 +69,10 @@ public class UserService {
         
         User user = userMapper.toEntity(userRegistrationDTO);
         User registeredUser = userRepository.saveAndFlush(user);
+
+        // delete this
+        profileRepository.save(new PersonalProfile(user, ""));
+
         return userMapper.toDTO(registeredUser);
     }
 
