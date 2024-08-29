@@ -1,7 +1,7 @@
 package com.rev_connect_api.controllers;
 
-import com.rev_connect_api.dto.UserSearchResult;
-import com.rev_connect_api.entity.ConnectionRequest;
+import com.rev_connect_api.dto.UserSearchResultDTO;
+import com.rev_connect_api.models.ConnectionRequest;
 import com.rev_connect_api.services.ConnectionRequestService;
 import com.rev_connect_api.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -76,9 +76,9 @@ public class ConnectionRequestController {
     }
 
     @GetMapping("/search/{query}")
-    public ResponseEntity<List<UserSearchResult>> searchUsers(@PathVariable String query,
+    public ResponseEntity<List<UserSearchResultDTO>> searchUsers(@PathVariable String query,
             @RequestParam Long currentUserId) {
-        List<UserSearchResult> results = userService.searchUsersWithConditions(query, currentUserId);
+        List<UserSearchResultDTO> results = userService.searchUsersWithConditions(query, currentUserId);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 

@@ -1,12 +1,12 @@
 package com.rev_connect_api.dto;
 
-public class UserSearchResult {
+public class UserSearchResultDTO {
     private Long id;
     private String username;
     private boolean isSameUser;
     private boolean hasPendingRequest;
 
-    public UserSearchResult(Long id, String username, boolean isSameUser, boolean hasPendingRequest) {
+    public UserSearchResultDTO(Long id, String username, boolean isSameUser, boolean hasPendingRequest) {
         this.id = id;
         this.username = username;
         this.isSameUser = isSameUser;

@@ -1,8 +1,8 @@
 package com.rev_connect_api.services;
 
-import com.rev_connect_api.entity.ConnectionRequest;
-import com.rev_connect_api.entity.RequestStatus;
-import com.rev_connect_api.entity.User;
+import com.rev_connect_api.dto.RequestStatusDTO;
+import com.rev_connect_api.models.ConnectionRequest;
+import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.ConnectionRequestRepository;
 import com.rev_connect_api.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class ConnectionRequestService {
         ConnectionRequest request = new ConnectionRequest();
         request.setRequester(requester.get());
         request.setRecipient(recipient.get());
-        request.setStatus(RequestStatus.PENDING);
+        request.setStatus(RequestStatusDTO.PENDING);
 
         return connectionRequestRepository.save(request);
     }
@@ -69,12 +69,12 @@ public class ConnectionRequestService {
         ConnectionRequest request = connectionRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Request not found"));
 
-        if (request.getStatus() == RequestStatus.ACCEPTED) {
+        if (request.getStatus() == RequestStatusDTO.ACCEPTED) {
             logger.warn("Connection request with ID {} has already been accepted", requestId);
             throw new IllegalStateException("Request already accepted");
         }
 
-        request.setStatus(RequestStatus.ACCEPTED);
+        request.setStatus(RequestStatusDTO.ACCEPTED);
         connectionRequestRepository.save(request);
     }
 
@@ -84,12 +84,12 @@ public class ConnectionRequestService {
         ConnectionRequest request = connectionRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Request not found"));
 
-        if (request.getStatus() == RequestStatus.REJECTED) {
+        if (request.getStatus() == RequestStatusDTO.REJECTED) {
             logger.warn("Connection request with ID {} has already been rejected", requestId);
             throw new IllegalStateException("Request already rejected");
         }
 
-        request.setStatus(RequestStatus.REJECTED);
+        request.setStatus(RequestStatusDTO.REJECTED);
         connectionRequestRepository.save(request);
     }
 
@@ -99,7 +99,7 @@ public class ConnectionRequestService {
         ConnectionRequest request = connectionRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Request not found"));
 
-        if (request.getStatus() != RequestStatus.ACCEPTED) {
+        if (request.getStatus() != RequestStatusDTO.ACCEPTED) {
             logger.warn("Only accepted connections can be removed. Request ID: {}", requestId);
             throw new IllegalStateException("Only accepted connections can be removed");
         }
@@ -119,6 +119,6 @@ public class ConnectionRequestService {
 
     public boolean hasPendingRequest(Long requesterId, Long recipientId) {
         return connectionRequestRepository.existsByRequesterUserIdAndRecipientUserIdAndStatus(requesterId,
-                recipientId, RequestStatus.PENDING);
+                recipientId, RequestStatusDTO.PENDING);
     }
 }

@@ -1,9 +1,10 @@
-package com.rev_connect_api.entity;
+package com.rev_connect_api.models;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 

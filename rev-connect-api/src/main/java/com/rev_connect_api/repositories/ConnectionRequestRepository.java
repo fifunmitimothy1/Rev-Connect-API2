@@ -1,7 +1,8 @@
 package com.rev_connect_api.repositories;
 
-import com.rev_connect_api.entity.ConnectionRequest;
-import com.rev_connect_api.entity.RequestStatus;
+import com.rev_connect_api.dto.RequestStatusDTO;
+import com.rev_connect_api.models.ConnectionRequest;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +20,5 @@ public interface ConnectionRequestRepository extends JpaRepository<ConnectionReq
     @Query("SELECT cr FROM ConnectionRequest cr WHERE (cr.requester.userId = :userId OR cr.recipient.userId = :userId) AND cr.status = 'ACCEPTED'")
     List<ConnectionRequest> findConnectionsByUserId(@Param("userId") Long userId);
 
-    boolean existsByRequesterUserIdAndRecipientUserIdAndStatus(Long requesterId, Long recipientId, RequestStatus status);
+    boolean existsByRequesterUserIdAndRecipientUserIdAndStatus(Long requesterId, Long recipientId, RequestStatusDTO status);
 }

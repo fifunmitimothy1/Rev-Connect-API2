@@ -1,7 +1,7 @@
 package com.rev_connect_api.services;
 
-import com.rev_connect_api.dto.UserSearchResult;
-import com.rev_connect_api.entity.User;
+import com.rev_connect_api.dto.UserSearchResultDTO;
+import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.searchUsersByUsernameStartingWith(query);
     }
 
-    public List<UserSearchResult> searchUsersWithConditions(String query, Long currentUserId) {
+    public List<UserSearchResultDTO> searchUsersWithConditions(String query, Long currentUserId) {
         List<User> users = userRepository.searchUsersByUsernameStartingWith(query);
 
         return users.stream().map(user -> {
@@ -34,7 +34,7 @@ public class UserService {
             boolean hasPendingRequest = connectionRequestService.hasPendingRequest(currentUserId, user.getUserId())
                     || connectionRequestService.hasPendingRequest(user.getUserId(), currentUserId);
 
-            return new UserSearchResult(user.getUserId(), user.getUsername(), isSameUser, hasPendingRequest);
+            return new UserSearchResultDTO(user.getUserId(), user.getUsername(), isSameUser, hasPendingRequest);
         }).collect(Collectors.toList());
     }
 }

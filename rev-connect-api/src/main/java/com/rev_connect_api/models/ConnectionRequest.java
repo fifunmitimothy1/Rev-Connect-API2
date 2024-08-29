@@ -1,6 +1,8 @@
-package com.rev_connect_api.entity;
+package com.rev_connect_api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rev_connect_api.dto.RequestStatusDTO;
+
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -26,7 +28,7 @@ public class ConnectionRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private RequestStatus status;
+    private RequestStatusDTO status;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -57,11 +59,11 @@ public class ConnectionRequest {
         this.recipient = recipient;
     }
 
-    public RequestStatus getStatus() {
+    public RequestStatusDTO getStatus() {
         return status;
     }
 
-    public void setStatus(RequestStatus status) {
+    public void setStatus(RequestStatusDTO status) {
         this.status = status;
     }
 
