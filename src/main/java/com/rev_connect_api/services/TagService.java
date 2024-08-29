@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.rev_connect_api.dto.TagResponseDTO;
+import com.rev_connect_api.dto.TagDTO;
 import com.rev_connect_api.mapper.TagMapper;
 import com.rev_connect_api.models.Tag;
 import com.rev_connect_api.repositories.TagRepository;
@@ -33,17 +33,17 @@ public class TagService {
     }
 
     @Transactional
-    public List<TagResponseDTO> getAllTags() {
+    public List<TagDTO> getAllTags() {
         return tagRepository.findAll().stream()
-            .map(tagMapper::toTagResponseDTO)
+            .map(tagMapper::toTagDTO)
             .toList();
     }
 
     @Transactional
-    public TagResponseDTO getTagById(Long id) {
+    public TagDTO getTagById(Long id) {
         Tag tag = tagRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag with that id not found."));
-        return tagMapper.toTagResponseDTO(tag);
+        return tagMapper.toTagDTO(tag);
     }
 
     @Transactional

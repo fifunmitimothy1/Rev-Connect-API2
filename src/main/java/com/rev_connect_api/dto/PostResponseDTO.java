@@ -16,5 +16,5 @@ public class PostResponseDTO {
     private LocalDateTime updatedAt;
 
     private Set<String> tagNames;
-    private Set<Long> taggedUserIds;
+    private Set<String> taggedUsernames;
 }

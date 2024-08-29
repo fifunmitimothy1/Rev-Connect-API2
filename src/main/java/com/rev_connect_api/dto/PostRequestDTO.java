@@ -18,7 +18,7 @@ public class PostRequestDTO {
     @NotBlank(message = "Content is required")
     private String content;
 
-    private Set<String> tagNames;
+    private Set<String> tagNames; // List of tag names to be added to the post
 
-    private Set<Long> taggedUserIds;
+    private Set<Long> taggedUserIds; // List of user IDs to be tagged to the post
 }

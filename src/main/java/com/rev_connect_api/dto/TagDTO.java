@@ -1,13 +1,10 @@
 package com.rev_connect_api.dto;
 
-import java.util.Set;
-
 import lombok.Data;
 
 @Data
-public class TagResponseDTO {
+public class TagDTO {
 
     private Long tagId;
     private String tagName;
-    private Set<Long> postIds;
 }

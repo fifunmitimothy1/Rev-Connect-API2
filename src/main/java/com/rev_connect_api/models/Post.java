@@ -48,7 +48,7 @@ public class Post {
         joinColumns = @JoinColumn(name = "post_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<String> tagNames = new HashSet<>();
+    private Set<Tag> tags = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -56,7 +56,7 @@ public class Post {
         joinColumns = @JoinColumn(name = "post_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<Long> taggedUserIds = new HashSet<>();
+    private Set<User> taggedUsers = new HashSet<>();
 
 
     @PrePersist
