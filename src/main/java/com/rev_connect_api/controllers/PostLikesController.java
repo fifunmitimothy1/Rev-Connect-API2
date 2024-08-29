@@ -36,17 +36,17 @@ public class PostLikesController {
      * @param userId The ID of the user liking the post.
      * @return A ResponseEntity containing a PostResponse object with updated post details and like count if the post exists, or a NOT_FOUND status if the post does not exist.
      */
-    @PutMapping("/{postId}/like")
-    public ResponseEntity<PostResponse> likePost(@PathVariable long postId, @RequestParam long userId) {
-        if (postService.doesPostExist(postId)) {
-            postLikesService.like(postId, userId);
-            Post post = postService.getPostById(BigInteger.valueOf(postId));
-            long likesCount = postLikesService.countLikesForPost(postId);
-            PostResponse postResponse = new PostResponse(post, likesCount);
-            System.out.println(postResponse.toString());
-            return new ResponseEntity<>(postResponse, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PutMapping("/{postId}/like")
+//    public ResponseEntity<PostResponse> likePost(@PathVariable long postId, @RequestParam long userId) {
+//        if (postService.doesPostExist(postId)) {
+//            postLikesService.like(postId, userId);
+//            Post post = postService.getPostById(BigInteger.valueOf(postId));
+//            long likesCount = postLikesService.countLikesForPost(postId);
+//            PostResponse postResponse = new PostResponse(post, likesCount);
+//            System.out.println(postResponse.toString());
+//            return new ResponseEntity<>(postResponse, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }
