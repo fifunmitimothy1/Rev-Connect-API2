@@ -30,7 +30,7 @@ import com.rev_connect_api.security.JwtUtil;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/postTestInit.sql")
 public class PostsTest {
-    
+
     TestRestTemplate testRestTemplate;
     JwtUtil jwtUtil;
 
@@ -63,7 +63,7 @@ public class PostsTest {
 
     @BeforeEach
     public void beforeEach() {
-        serviceLocation = "http://localhost:" + port + "/api/post";
+        serviceLocation = "http://localhost:" + port + "/api/posts";
         mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
 

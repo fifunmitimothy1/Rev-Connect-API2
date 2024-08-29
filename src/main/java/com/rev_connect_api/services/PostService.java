@@ -15,7 +15,6 @@ import com.rev_connect_api.repositories.UserRepository;
 import com.rev_connect_api.dto.PostRequestDTO;
 import com.rev_connect_api.dto.PostResponseDTO;
 import com.rev_connect_api.mapper.PostMapper;
-import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

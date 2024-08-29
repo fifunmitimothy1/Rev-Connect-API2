@@ -2,12 +2,12 @@ package com.rev_connect_api.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.security.Principal;
 import com.rev_connect_api.services.PostService;
 
 import com.rev_connect_api.dto.PostRequestDTO;
@@ -42,19 +42,13 @@ public class PostController {
     @GetMapping("/feed")
     public ResponseEntity<List<Post>> retrieveFeed() {
         try {
-            String currentUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String currentUsername = ((Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
             return ResponseEntity.status(HttpStatus.OK).body(postService.GetFeedForUser(currentUsername));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } 
     }
   
-
-    public PostController(PostService postService, MediaService mediaService) {
-        this.postService = postService;
-        this.mediaService = mediaService;
-    }
-
     @PostMapping()
     public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequestDTO postRequestDTO) {
          PostResponseDTO createdPost = postService.savePost(postRequestDTO);
