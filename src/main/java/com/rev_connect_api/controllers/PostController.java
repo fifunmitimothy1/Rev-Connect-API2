@@ -3,9 +3,11 @@ package com.rev_connect_api.controllers;
 import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.models.User;
 import com.rev_connect_api.security.Principal;
 import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
+import com.rev_connect_api.services.UserService;
 import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -31,35 +33,38 @@ public class PostController {
     private final TimestampUtil timestampUtil;
     private final PostService postService;
     private final MediaService mediaService;
+    private final UserService userService;
 
-    public PostController(TimestampUtil timestampUtil, PostService postService, MediaService mediaService) {
+    public PostController(TimestampUtil timestampUtil, PostService postService, MediaService mediaService, UserService userService) {
         this.timestampUtil = timestampUtil;
         this.postService = postService;
         this.mediaService = mediaService;
+        this.userService = userService;
     }
 
-    // Could not get ModelAttribute working, so I used this solution which is not the best
     @PostMapping
     public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
-                                           @RequestParam("content") String content,
-                                           @RequestParam(value = "file", required = false) MultipartFile file) {
+                                        @RequestParam("content") String content,
+                                        @RequestParam(value = "file", required = false) MultipartFile file) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
         Principal principal = (Principal) auth.getPrincipal();
 
+        // Assuming you have a UserService to fetch the User entity
+        User user = userService.findUserById(new BigInteger(principal.getUserId().toString()));
+
         Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
-        post.setUserId(new BigInteger(principal.getUserId().toString()));
-        post.setCreatedAt(timestampUtil.getCurrentTimestamp());
+        post.setPostedBy(user);  // Set the User entity
+        post.setCreatedAt(timestampUtil.getCurrentTimestamp().toLocalDateTime());
 
         Post response;
-        if(file != null) {
+        if (file != null) {
             response = postService.savePost(post, file);
         } else {
             response = postService.savePost(post);
         }
         return ResponseEntity.ok(response);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Post> GetPostById(@PathVariable BigInteger id) {
         Post response = postService.getPostById(id);

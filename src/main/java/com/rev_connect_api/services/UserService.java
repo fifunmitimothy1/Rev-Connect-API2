@@ -1,5 +1,6 @@
 package com.rev_connect_api.services;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -89,7 +90,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUserById(Long id) {
+    public User findUserById(BigInteger id) {
        return userRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }

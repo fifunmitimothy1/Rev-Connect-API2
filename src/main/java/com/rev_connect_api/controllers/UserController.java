@@ -1,5 +1,6 @@
 package com.rev_connect_api.controllers;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable BigInteger id) {
         User user = userService.findUserById(id);
         return ResponseEntity.ok(mapToDTO(user));
     }

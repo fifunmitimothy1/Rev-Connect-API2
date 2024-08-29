@@ -41,7 +41,7 @@ public class PostService {
     @Transactional
     public Post savePost(Post post, MultipartFile file) {
         Post response = postRepository.save(post);
-        mediaService.saveMedia(file, response.getPostId(), response.getCreatedAt());
+        mediaService.saveMedia(file, response.getPostId(), Timestamp.valueOf(response.getCreatedAt()));
         return response;
     }
 
@@ -73,11 +73,12 @@ public class PostService {
     @Transactional
     public Post updatePost(Post post) {
         Post fetchedPost = getPostById(post.getPostId());
-        if(fetchedPost == null) {
+        if (fetchedPost == null) {
             return null;
         }
-        fetchedPost.setUpdatedAt(timestampUtil.getCurrentTimestamp());
-        fetchedPost.setTitle(post.getTitle());
+        fetchedPost.setUpdatedAt(timestampUtil.getCurrentTimestamp().toLocalDateTime());
+        // Remove the following line if title is not needed
+        // fetchedPost.setTitle(post.getTitle());
         fetchedPost.setContent(post.getContent());
 
         Post response = savePost(fetchedPost);
@@ -90,7 +91,8 @@ public class PostService {
 
     public Post postDtoToPost(PostCreateRequest postCreateRequest) {
         return Post.builder()
-                .title(postCreateRequest.getTitle())
+                // Remove the following line if title is not needed
+                // .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .build();
     }

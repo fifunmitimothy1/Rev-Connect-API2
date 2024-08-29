@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,14 +95,14 @@ public class PostControllerTest {
         assertNotNull(media);
         assertEquals(postResponse.getPostId(), media.getPostId());
         // Round or truncate the timestamp to milliseconds before comparison
-        long postCreatedAtMillis = postResponse.getCreatedAt().getTime() / 1000;
+        long postCreatedAtMillis = postResponse.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000;
         long mediaCreatedAtMillis = media.getCreatedAt().getTime() / 1000;
 
     assertEquals(postCreatedAtMillis, mediaCreatedAtMillis);
     
         // Define an acceptable tolerance (e.g., 1 millisecond)
         long tolerance = 1000;
-        assertTrue(Math.abs(postResponse.getCreatedAt().getTime() - media.getCreatedAt().getTime()) <= tolerance);
+        assertTrue(Math.abs(postResponse.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - media.getCreatedAt().getTime()) <= tolerance);
     
         // Test delete post, should delete the media as well
         boolean deletedMedia = mediaService.deleteMediaByPostId(postId);
@@ -183,7 +184,7 @@ public class PostControllerTest {
             assertEquals(title, post.getTitle());
             assertEquals(content, post.getContent());
             // The previous post(the more recent) should have a timestamp greater than or equal to the current post, this ensures the posts are sorted by most recent
-            boolean createdAtAfterOrAtSameTime = (previousPost.getCreatedAt().after(post.getCreatedAt()))
+            boolean createdAtAfterOrAtSameTime = (previousPost.getCreatedAt().isAfter(post.getCreatedAt()))
                     || previousPost.getCreatedAt().equals(post.getCreatedAt());
             assertTrue(createdAtAfterOrAtSameTime);
         });

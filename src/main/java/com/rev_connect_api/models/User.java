@@ -1,5 +1,6 @@
 package com.rev_connect_api.models;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/recommendations")
+@RequestMapping("/recommendations")
 public class FollowRecommendationController {
 
     // Inject the UserRepository to retrieve the current user by username
@@ -27,7 +27,7 @@ public class FollowRecommendationController {
     private FollowRecommendationService followRecommendationService;
 
     // Endpoint to get follow recommendations for the current user
-    @GetMapping("/follow")
+    @GetMapping("/follow/{user_id}")
     public ResponseEntity<List<User>> getFollowRecommendations(Principal principal) {
         // Retrieve the current user from the repository using the username from Principal
         Optional<User> currentUser = userRepository.findByUsername(principal.getName());
