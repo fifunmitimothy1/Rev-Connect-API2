@@ -2,6 +2,9 @@ drop table if exists user_roles;
 drop table if exists users cascade;
 drop table if exists personal_profiles;
 drop table if exists posts cascade;
+drop table if exists tags cascade;
+drop table if exists post_tags cascade;
+drop table if exists tagged_users cascade;
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
