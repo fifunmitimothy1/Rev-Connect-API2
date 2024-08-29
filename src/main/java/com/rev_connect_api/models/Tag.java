@@ -25,6 +25,6 @@ public class Tag {
     private String tagName;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<Post> posts = new HashSet<>();
+    private Set<Long> postIds = new HashSet<>();
    
 }

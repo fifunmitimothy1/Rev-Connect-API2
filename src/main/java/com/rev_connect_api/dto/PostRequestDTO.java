@@ -1,6 +1,6 @@
 package com.rev_connect_api.dto;
 
-import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +18,7 @@ public class PostRequestDTO {
     @NotBlank(message = "Content is required")
     private String content;
 
-    private List<String> tagName;
+    private Set<String> tagNames;
 
-    private List<Long> taggedUserIds;
+    private Set<Long> taggedUserIds;
 }
