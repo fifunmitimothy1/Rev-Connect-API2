@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface ConnectionRequestRepository extends JpaRepository<ConnectionRequest, Long> {
 
-    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.accountId = :userId AND cr.status = 'PENDING'")
+    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.userId = :userId AND cr.status = 'PENDING'")
     List<ConnectionRequest> findPendingRequestsForUser(@Param("userId") Long userId);
 
-    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.accountId = :userId AND cr.status = 'ACCEPTED'")
+    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.userId = :userId AND cr.status = 'ACCEPTED'")
     List<ConnectionRequest> findAcceptedConnectionsForUser(@Param("userId") Long userId);
 
-    @Query("SELECT cr FROM ConnectionRequest cr WHERE (cr.requester.accountId = :userId OR cr.recipient.accountId = :userId) AND cr.status = 'ACCEPTED'")
+    @Query("SELECT cr FROM ConnectionRequest cr WHERE (cr.requester.userId = :userId OR cr.recipient.userId = :userId) AND cr.status = 'ACCEPTED'")
     List<ConnectionRequest> findConnectionsByUserId(@Param("userId") Long userId);
 
-    boolean existsByRequesterAccountIdAndRecipientAccountIdAndStatus(Long requesterId, Long recipientId, RequestStatus status);
+    boolean existsByRequesterUserIdAndRecipientUserIdAndStatus(Long requesterId, Long recipientId, RequestStatus status);
 }

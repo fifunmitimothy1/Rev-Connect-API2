@@ -1,60 +1,58 @@
--- Drop the tables if they exist
 DROP TABLE IF EXISTS connection_requests;
-DROP TABLE IF EXISTS system_users;
+DROP TABLE IF EXISTS users;
 
--- Create the system_users table
-CREATE TABLE system_users (
-    accountId INT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255)
+CREATE TABLE users (
+    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    user_password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    is_business BOOLEAN NOT NULL DEFAULT FALSE,
+    account_type VARCHAR(15) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert test data into system_users
-INSERT INTO system_users (accountId, email, username, password) VALUES 
-(1, 'anjineyulu215@revature.net', 'anjineyulu215', 'anjineyulu'),
-(2, 'asif650@revature.net', 'asif650', 'asif'),
-(3, 'benjamin346@revature.net', 'benjamin346', 'benjamin'),
-(4, 'christopherjoseph850@revature.net', 'testuser4', 'password'),
-(5, 'gautam746@revature.net', 'gautam746', 'gautam'),
-(6, 'matt392@revature.net', 'matt392', 'matt'),
-(7, 'mohamed019@revature.net', 'mohamed019', 'mohamed'),
-(8, 'mohan863@revature.net', 'mohan863', 'mohan'),
-(9, 'natnael035@revature.net', 'natnael035', 'natnael'),
-(10, 'olufifunmi957@revature.net', 'olufifunmi957', 'olufifunmi'),
-(11, 'rachana153@revature.net', 'rachana153', 'rachana'),
-(12, 'trevor689@revature.net', 'trevor689', 'trevor'),
-(13, 'yonas905@revature.net', 'yonas905', 'yonas'),
-(14, 'nickolas.jurczak@revature.com', 'nickolas.jurczak', 'jurczak'),
-(15, 'phone329@revature.net', 'phone329', 'phone'),
-(16, 'sarangi604@revature.net', 'sarangi604', 'sarangi');
+INSERT INTO users (user_id, username, user_password, email, first_name, last_name, is_business, account_type, created_at, updated_at)
+VALUES
+(1, 'anjineyulu215', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'anjineyulu215@revature.net', 'Anjineyulu', 'Singh', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'asif650', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'asif650@revature.net', 'Asif', 'Khan', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(3, 'benjamin346', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'benjamin346@revature.net', 'Benjamin', 'Smith', true, 'business', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4, 'christopherjoseph850', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'christopherjoseph850@revature.net', 'Christopher', 'Joseph', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(5, 'gautam746', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'gautam746@revature.net', 'Gautam', 'Reddy', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(6, 'matt392', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'matt392@revature.net', 'Matt', 'Johnson', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(7, 'mohamed019', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'mohamed019@revature.net', 'Mohamed', 'Ali', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(8, 'mohan863', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'mohan863@revature.net', 'Mohan', 'Sharma', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(9, 'natnael035', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'natnael035@revature.net', 'Natnael', 'Gebre', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10, 'olufifunmi957', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'olufifunmi957@revature.net', 'Olufifunmi', 'Adekunle', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(11, 'rachana153', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'rachana153@revature.net', 'Rachana', 'Patel', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(12, 'trevor689', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'trevor689@revature.net', 'Trevor', 'Brown', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(13, 'yonas905', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'yonas905@revature.net', 'Yonas', 'Mekonnen', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(14, 'nickolas.jurczak', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'nickolas.jurczak@revature.com', 'Nickolas', 'Jurczak', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(15, 'phone329', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'phone329@revature.net', 'Phone', 'Smith', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(16, 'sarangi604', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'sarangi604@revature.net', 'Sarangi', 'Mehta', false, 'personal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- Create the connection_requests table
 CREATE TABLE connection_requests (
     connection_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    requester_id INT NOT NULL,
-    recipient_id INT NOT NULL,
+    requester_id BIGINT NOT NULL,
+    recipient_id BIGINT NOT NULL,
     status VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    -- Foreign key constraints to ensure referential integrity
-    FOREIGN KEY (requester_id) REFERENCES system_users(accountId),
-    FOREIGN KEY (recipient_id) REFERENCES system_users(accountId)
+    FOREIGN KEY (requester_id) REFERENCES users(user_id),
+    FOREIGN KEY (recipient_id) REFERENCES users(user_id)
 );
--- Insert sample data into connection_requests
+
 INSERT INTO connection_requests (requester_id, recipient_id, status) VALUES
-(1, 2, 'PENDING'),       -- anjineyulu215 requested a connection with asif650
-(3, 4, 'ACCEPTED'),      -- benjamin346 requested a connection with testuser4, and it was accepted
-(5, 6, 'REJECTED'),      -- gautam746 requested a connection with matt392, but it was declined
-(7, 8, 'PENDING'),       -- mohamed019 requested a connection with mohan863
-(9, 10, 'PENDING'),      -- natnael035 requested a connection with olufifunmi957
-(11, 12, 'ACCEPTED'),    -- rachana153 requested a connection with trevor689, and it was accepted
-(13, 14, 'PENDING'),     -- yonas905 requested a connection with nickolas.jurczak
-(15, 16, 'REJECTED'),    -- phone329 requested a connection with sarangi604, but it was declined
-(1, 3, 'PENDING'),       -- anjineyulu215 requested a connection with benjamin346
-(3, 2, 'ACCEPTED'),      -- anjineyulu215 requested a connection with asif650
-(3, 6, 'ACCEPTED');      -- benjamin346 requested a connection with matt392, and it was accepted
-
-
-
-
+(1, 2, 'PENDING'),      
+(3, 4, 'ACCEPTED'),     
+(5, 6, 'REJECTED'),     
+(7, 8, 'PENDING'),     
+(9, 10, 'PENDING'),     
+(11, 12, 'ACCEPTED'),   
+(13, 14, 'PENDING'),    
+(15, 16, 'REJECTED'),   
+(1, 3, 'PENDING'),     
+(3, 2, 'ACCEPTED'),     
+(3, 6, 'ACCEPTED');     
