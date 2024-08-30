@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToMany;
 
 import java.util.Set;
 
-@Entity(name = "hashtag")
+@Entity(name = "hashtags")
 public class Hashtag {
 
     @Id

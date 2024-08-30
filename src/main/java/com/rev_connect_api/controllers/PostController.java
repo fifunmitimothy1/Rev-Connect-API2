@@ -50,8 +50,9 @@ public class PostController {
         Authentication auth = context.getAuthentication();
         Principal principal = (Principal) auth.getPrincipal();
 
-        // Assuming you have a UserService to fetch the User entity
-        User user = userService.findUserById(new BigInteger(principal.getUserId().toString()));
+        Long userId = principal.getUserId().longValue();
+        // UserService to fetch the User entity
+        User user = userService.findUserById(userId);
 
         Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
         post.setPostedBy(user);  // Set the User entity

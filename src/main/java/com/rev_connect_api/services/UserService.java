@@ -90,7 +90,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUserById(BigInteger id) {
+    public User findUserById(Long id) {
        return userRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }

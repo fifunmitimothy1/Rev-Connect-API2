@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
- 
+
+import java.util.Set;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
  
@@ -36,6 +37,15 @@ public class Post {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @ManyToMany
+    @JoinTable(
+        name = "post_hashtags",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    private Set<Hashtag> hashtags; // Hashtags associated with this post
+
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
