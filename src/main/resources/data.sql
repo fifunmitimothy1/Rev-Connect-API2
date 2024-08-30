@@ -77,17 +77,21 @@ VALUES
 (3, 'TestBio3!'),
 (4, 'TestBio4!');
 
--- Insert posts
-INSERT INTO posts (author_id, title, content, created_at, updated_at)
-VALUES
-(1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+INSERT INTO posts (author_id, title, content, created_at, updated_at) VALUES
+(1, 'First Post', 'This is the content of the first post.', '2024-08-20 14:30:00', '2024-08-20 14:30:00'),
+(2, 'Morning Thoughts', 'Just sharing some morning thoughts.', '2024-08-21 09:00:00', '2024-08-21 09:00:00'),
+(1, 'Another Post', 'Here is some more content.', '2024-08-21 10:15:00', '2024-08-21 10:15:00'),
+(3, 'Lunch Break', 'Enjoying my lunch break.', '2024-08-22 12:45:00', '2024-08-22 12:45:00'),
+(4, 'Afternoon Post', 'Some afternoon reflections.', '2024-08-22 16:00:00', '2024-08-22 16:00:00'),
+(1, 'Yet Another Post', 'Adding another post to my collection.', '2024-08-23 11:30:00', '2024-08-23 11:30:00'),
+(5, 'Midday Thoughts', 'Midday musings.', '2024-08-23 13:00:00', '2024-08-23 13:00:00'),
+(2, 'Early Morning', 'Starting the day early.', '2024-08-24 08:30:00', '2024-08-24 08:30:00'),
+(3, 'Afternoon Musings', 'Reflecting on the day.', '2024-08-24 15:00:00', '2024-08-24 15:00:00'),
+(4, 'Sunday Thoughts', 'Some thoughts for Sunday.', '2024-08-25 10:00:00', '2024-08-25 10:00:00'),
+(1, 'Final Post', 'This is my last post.', '2024-08-26 14:30:00', '2024-08-26 14:30:00'),
+(5, 'Evening Reflections', 'Wrapping up the day.', '2024-08-26 17:45:00', '2024-08-26 17:45:00');
 
-ALTER SEQUENCE user_sequence RESTART WITH 5;
-ALTER SEQUENCE post_sequence RESTART WITH 5;
 
 -- create a table for  connection_requests
 CREATE TABLE connection_requests(
