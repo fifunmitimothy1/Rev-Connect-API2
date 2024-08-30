@@ -23,8 +23,4 @@ public class Tag {
 
     @Column(name = "tag_name", nullable = false, unique = true)
     private String tagName;
-
-    @ManyToMany(mappedBy = "tags")
-    private Set<Post> posts = new HashSet<>();
-   
 }

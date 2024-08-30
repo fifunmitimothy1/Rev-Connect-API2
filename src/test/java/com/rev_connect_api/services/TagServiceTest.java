@@ -101,7 +101,7 @@ class TagServiceTest {
     void testDeleteTag_TagExists() {
         when(tagRepository.existsById(1L)).thenReturn(true);
 
-        assertDoesNotThrow(() -> tagService.deletetag(1L));
+        assertDoesNotThrow(() -> tagService.deleteTag(1L));
         verify(tagRepository).deleteById(1L);
     }
 
@@ -109,7 +109,7 @@ class TagServiceTest {
     void testDeleteTag_TagNotFound() {
         when(tagRepository.existsById(1L)).thenReturn(false);
 
-        assertThrows(ResponseStatusException.class, () -> tagService.deletetag(1L));
+        assertThrows(ResponseStatusException.class, () -> tagService.deleteTag(1L));
         verify(tagRepository, never()).deleteById(1L);
     }
 }
