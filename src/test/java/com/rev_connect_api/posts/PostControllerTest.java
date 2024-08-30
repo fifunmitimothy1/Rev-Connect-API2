@@ -27,12 +27,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.Set;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasItems;
 @SpringBootTest()
 @AutoConfigureMockMvc(addFilters = false) // Disable security filters if applicable
 public class PostControllerTest {
@@ -55,6 +58,7 @@ public class PostControllerTest {
     private PostResponseDTO postResponseDTO;
 
     private final static Long USER_ID = 1L;
+    
 
     @BeforeEach
     void setup() {
@@ -63,6 +67,8 @@ public class PostControllerTest {
         postRequestDTO.setTitle("Test Title");
         postRequestDTO.setContent("Test Content");
         postRequestDTO.setIsPinned(false);
+        postRequestDTO.setTagNames(Set.of("Tag1", "Tag2"));
+        postRequestDTO.setTaggedUserIds(Set.of(2L, 3L));
 
         postResponseDTO = new PostResponseDTO();
         postResponseDTO.setPostId(1L);
@@ -70,6 +76,8 @@ public class PostControllerTest {
         postResponseDTO.setTitle("Test Title");
         postResponseDTO.setContent("Test Content");
         postRequestDTO.setIsPinned(true);
+        postResponseDTO.setTagNames(Set.of("Tag1", "Tag2"));
+        postResponseDTO.setTaggedUsernames(Set.of("user2", "user3"));
 
         // Principal principal = new Principal(USER_ID, "user");
         // UsernamePasswordAuthenticationToken auth =
@@ -86,7 +94,11 @@ public class PostControllerTest {
             .content(objectMapper.writeValueAsString(postRequestDTO)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.postId").value(postResponseDTO.getPostId()))
-            .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()));
+            .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()))
+            .andExpect(jsonPath("$.tagNames").isArray())
+            .andExpect(jsonPath("$.tagNames", hasItems("Tag1", "Tag2")))
+            .andExpect(jsonPath("$.taggedUsernames").isArray())
+            .andExpect(jsonPath("$.taggedUsernames", hasItems("user2", "user3")));
     }
     
     @Test
@@ -97,7 +109,11 @@ public class PostControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.postId").value(postResponseDTO.getPostId()))
-                .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()));
+                .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()))
+                .andExpect(jsonPath("$.tagNames").isArray())
+                .andExpect(jsonPath("$.tagNames", hasItems("Tag1", "Tag2")))
+                .andExpect(jsonPath("$.taggedUsernames").isArray())
+                .andExpect(jsonPath("$.taggedUsernames", hasItems("user2", "user3")));
     }
 
     @Test
@@ -107,7 +123,12 @@ public class PostControllerTest {
         mockMvc.perform(get("/posts")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].postId").value(postResponseDTO.getPostId()));
+                .andExpect(jsonPath("$[0].postId").value(postResponseDTO.getPostId()))
+                .andExpect(jsonPath("$[0].title").value(postResponseDTO.getTitle()))
+                .andExpect(jsonPath("$[0].tagNames").isArray())
+                .andExpect(jsonPath("$[0].tagNames", hasItems("Tag1", "Tag2")))
+                .andExpect(jsonPath("$[0].taggedUsernames").isArray())
+                .andExpect(jsonPath("$[0].taggedUsernames", hasItems("user2", "user3")));
     }
 
     @Test
@@ -119,7 +140,11 @@ public class PostControllerTest {
                 .content(objectMapper.writeValueAsString(postRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.postId").value(postResponseDTO.getPostId()))
-                .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()));
+                .andExpect(jsonPath("$.title").value(postResponseDTO.getTitle()))
+                .andExpect(jsonPath("$.tagNames").isArray())
+                .andExpect(jsonPath("$.tagNames", hasItems("Tag1", "Tag2")))
+                .andExpect(jsonPath("$.taggedUsernames").isArray())
+                .andExpect(jsonPath("$.taggedUsernames", hasItems("user2", "user3")));
     }
 
     @Test
