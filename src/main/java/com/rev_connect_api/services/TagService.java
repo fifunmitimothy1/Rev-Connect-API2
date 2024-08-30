@@ -47,7 +47,7 @@ public class TagService {
     }
 
     @Transactional
-    public void deletetag(Long id) {
+    public void deleteTag(Long id) {
         if(!tagRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag with that id not found.");
         }

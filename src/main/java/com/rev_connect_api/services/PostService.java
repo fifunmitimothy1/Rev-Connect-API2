@@ -41,19 +41,21 @@ public class PostService {
         this.postMapper = postMapper;
     }
 
+    @Transactional
     private Set<Tag> handleTags(Set<String> tagNames) {
         return tagNames.stream()
             .map(tagService::findOrCreateByName)
             .collect(Collectors.toSet());
     }
 
+    @Transactional
     private Set<User> handleTaggedUsers(Set<Long> taggedUserIds) {
         return taggedUserIds.stream()
             .map(userId -> userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")))
             .collect(Collectors.toSet());
     }
 
-    
+    @Transactional
     public PostResponseDTO getPostById(Long id) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
@@ -66,6 +68,7 @@ public class PostService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<PostResponseDTO> getAllPosts() {
         return postRepository.findAll().stream()
             .map(postMapper::toPostResponseDTO)

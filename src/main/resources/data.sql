@@ -97,6 +97,25 @@ VALUES
 (2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 (1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+INSERT INTO tags (tag_name)
+VALUES
+('Announcement'),
+('Personal'),
+('Private');
+
+
+INSERT INTO post_tags (post_id, tag_id)
+VALUES
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 3);
+
+INSERT INTO tagged_users (post_id, user_id)
+VALUES
+(1, 1),
+(1, 2);
 
 ALTER SEQUENCE user_sequence RESTART WITH 5;
 ALTER SEQUENCE post_sequence RESTART WITH 5;
+ALTER SEQUENCE tag_sequence RESTART WITH 4;
