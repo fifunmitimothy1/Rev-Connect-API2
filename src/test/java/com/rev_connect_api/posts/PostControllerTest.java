@@ -162,8 +162,8 @@ public class PostControllerTest {
     void testUpdatePin_Success() throws Exception {
         when(postService.updatePin(1L, false)).thenReturn(true);
 
-        mockMvc.perform(post("/posts/pin/1"))
-                // .param("isPinned", "false")
+        mockMvc.perform(post("/posts/pin/1")
+                .param("isPinned", "false"))
                 // .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));

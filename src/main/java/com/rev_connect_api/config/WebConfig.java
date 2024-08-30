@@ -16,4 +16,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/public/");
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // Disables cors I believe? Probably not recommended for production but ok for local dev
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("*");
+    }
 }
