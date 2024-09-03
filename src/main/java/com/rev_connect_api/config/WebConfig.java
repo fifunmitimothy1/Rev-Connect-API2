@@ -19,9 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // Disables cors I believe? Probably not recommended for production but ok for local dev
         registry.addMapping("/**")
-                .allowedMethods("*")
-                .allowedOrigins("*");
+                .allowedOrigins("http://localhost:5173") 
+                .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
 }
