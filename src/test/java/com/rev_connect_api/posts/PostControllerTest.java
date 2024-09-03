@@ -3,8 +3,10 @@ package com.rev_connect_api.posts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.controllers.PostController;
+import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.dto.PostRequestDTO;
 import com.rev_connect_api.dto.PostResponseDTO;
+import com.rev_connect_api.models.Post;
 import com.rev_connect_api.security.Principal;
 import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
@@ -17,14 +19,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -59,6 +66,7 @@ public class PostControllerTest {
         postRequestDTO.setAuthorId(1L);
         postRequestDTO.setTitle("Test Title");
         postRequestDTO.setContent("Test Content");
+        postRequestDTO.setIsPinned(false);
         postRequestDTO.setTagNames(Set.of("Tag1", "Tag2"));
         postRequestDTO.setTaggedUserIds(Set.of(2L, 3L));
 
@@ -67,6 +75,7 @@ public class PostControllerTest {
         postResponseDTO.setAuthorId(1L);
         postResponseDTO.setTitle("Test Title");
         postResponseDTO.setContent("Test Content");
+        postRequestDTO.setIsPinned(true);
         postResponseDTO.setTagNames(Set.of("Tag1", "Tag2"));
         postResponseDTO.setTaggedUsernames(Set.of("user2", "user3"));
 
@@ -144,6 +153,22 @@ public class PostControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+     /**
+     * This test case checks if updatePin API is working as expected.
+     * As it needs to change isPinned value only Nothing more than that.
+     */
+    @Test
+    void testUpdatePin_Success() throws Exception {
+        when(postService.updatePin(1L, false)).thenReturn(true);
+
+        mockMvc.perform(post("/posts/pin/1")
+                .param("isPinned", "false"))
+                // .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
+    }
+
     // @Test
     // @DirtiesContext // Ensures each test do not share state or data with each other
     // public void TestCreatePost() {

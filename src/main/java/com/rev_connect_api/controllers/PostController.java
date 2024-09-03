@@ -21,10 +21,20 @@ import com.rev_connect_api.services.PostService;
 
 import com.rev_connect_api.utils.TimestampUtil;
 import jakarta.validation.Valid;
+import java.math.BigInteger;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/posts")
@@ -106,5 +116,19 @@ public class PostController {
     public ResponseEntity<Boolean> deletePostById(@PathVariable Long id) {
         boolean deleted = postService.deletePostById(id);
         return new ResponseEntity<>(deleted, HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * This API is for making post pinned so can be shows on user profile on top of feeds.
+     * This API endpoint is api/post/pin/{id}
+     * This API update the value of isPinned with TRUE or FALSE and changes nothing else.
+     * @param id - pass post id to make changes
+     * @param isPinned - value of pin in boolean
+     * @return - returns the response status.
+     */
+    @PostMapping("/pin/{id}")
+    public ResponseEntity<Boolean> UpdatePin(@PathVariable Long id, @RequestParam("isPinned") Boolean isPinned) {
+        Boolean isPinUpdated = postService.updatePin(id,isPinned);
+        return new ResponseEntity<>(isPinUpdated,HttpStatus.OK);
     }
 }

@@ -34,6 +34,9 @@ public class Post {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "isPinned",nullable = false)
+    private Boolean isPinned;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -42,6 +45,9 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @LastModifiedDate
+    @Column(name = "pinned_at")
+    private LocalDateTime pinnedAt;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "post_tags",

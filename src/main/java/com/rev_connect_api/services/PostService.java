@@ -138,4 +138,14 @@ public class PostService {
         postRepository.deleteById(id);
         return true;
     }
+
+    /**
+     * This service funtion is to update pin value to specific post and update the post timestamp is the value is TRUE
+     * @param id
+     * @param isPinned
+     */
+    public Boolean updatePin (Long id,boolean isPinned){
+        int rowsAffected = postRepository.updatePin(id, isPinned);
+        return rowsAffected > 0;
+    }
 }
