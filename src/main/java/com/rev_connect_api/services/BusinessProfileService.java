@@ -33,13 +33,10 @@ public class BusinessProfileService {
      */
     public Profile retrieveBusinessProfile (Long userId) throws InvalidUserException{
         User check = userService.getUserById(userId);
-        if(check == null) {
-        throw new InvalidUserException("User " + userId + " was not found.");
-        } else {
-            Long id = check.getProfile().getId();
-            Optional<Profile> optionalProfile = businessProfileRepository.findById(id);
-            return optionalProfile.get(); 
-        }
+        Long id = check.getProfile().getId();
+        Optional<Profile> optionalProfile = businessProfileRepository.findById(id);
+        return optionalProfile.get(); 
+        
     }
 
     /**
