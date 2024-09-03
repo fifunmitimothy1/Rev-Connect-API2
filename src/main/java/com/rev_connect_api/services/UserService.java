@@ -9,12 +9,15 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rev_connect_api.dto.UserUpdateDTO;
+import com.rev_connect_api.exceptions.InvalidUserException;
+import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.models.Role;
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.UserRepository;
@@ -33,12 +36,16 @@ public class UserService {
     private final EmailService emailService;
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long EXPIRE_TOKEN = 15; // Expiration time in minutes
+    private final PersonalProfileService personalProfileService;
+    private final BusinessProfileService businessProfileService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, PersonalProfileService personalProfileService, BusinessProfileService businessProfileService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.personalProfileService = personalProfileService;
+        this.businessProfileService = businessProfileService;
     }
 
     // Find a user by username
@@ -50,6 +57,17 @@ public class UserService {
     // Find users by username or email
     public List<User> getUserDetails(String userName, String email) {
         return userRepository.findByUsernameOrEmail(userName, email);
+    }
+
+    // Find user by id
+    public User getUserById(Long userId) throws InvalidUserException{
+        Optional<User> oUser = userRepository.findById(userId);
+        if (oUser.isPresent()) {
+            return oUser.get();
+        }
+        else {
+            throw new InvalidUserException("Cannot find user for id: " + userId);
+        }
     }
 
     // Register a new user
@@ -72,6 +90,12 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
+        if(user.getIsBusiness()) {
+            user.setProfile(businessProfileService.createBusinessProfile());
+        } else {
+            user.setProfile(personalProfileService.createProfile());
+        }
+
         return userRepository.saveAndFlush(user);
     }
 
@@ -91,6 +115,7 @@ public class UserService {
             user.setPassword(hashedPassword);
         }
         if (updateDTO.getRoles() != null) user.setRoles(mapRoles(updateDTO.getRoles()));
+        if (updateDTO.getProfile() != null) user.setProfile(updateDTO.getProfile());
 
         return userRepository.saveAndFlush(user);
     }

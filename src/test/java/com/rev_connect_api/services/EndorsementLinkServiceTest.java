@@ -18,6 +18,7 @@ import java.util.*;
 
 import com.rev_connect_api.models.BusinessProfile;
 import com.rev_connect_api.models.EndorsementLink;
+import com.rev_connect_api.models.Profile;
 import com.rev_connect_api.repositories.BusinessProfileRepository;
 import com.rev_connect_api.repositories.EndorsementLinkRepository;
 
@@ -52,8 +53,8 @@ class EndorsementLinkServiceTest {
         String link = "https://example.com";
         String linkText = "LinkedIn Profile";
 
-        BusinessProfile businessProfile = new BusinessProfile();
-        when(businessProfileRepository.findByUserId(userId)).thenReturn(businessProfile);
+        Optional<Profile> businessProfile = Optional.of(new BusinessProfile());
+        when(businessProfileRepository.findById(userId)).thenReturn(businessProfile);
 
         EndorsementLink endorsementLink = new EndorsementLink(userId, link, linkText);
         endorsementLink.setId(1L);
@@ -66,7 +67,7 @@ class EndorsementLinkServiceTest {
         assertEquals(link, result.getLink());
         assertEquals(linkText, result.getLinkText());
 
-        verify(businessProfileRepository, times(1)).findByUserId(userId);
+        verify(businessProfileRepository, times(1)).findById(userId);
         verify(endorsementLinkRepository, times(1)).save(any(EndorsementLink.class));
     }
 
@@ -77,8 +78,8 @@ class EndorsementLinkServiceTest {
     void getAllEndorsementLinksByUserTest() {
         Long userId = 1L;
 
-        BusinessProfile businessProfile = new BusinessProfile();
-        when(businessProfileRepository.findByUserId(userId)).thenReturn(businessProfile);
+        Optional<Profile> businessProfile = Optional.of(new BusinessProfile());
+        when(businessProfileRepository.findById(userId)).thenReturn(businessProfile);
 
         List<EndorsementLink> list = new ArrayList<>();
         list.add(new EndorsementLink(userId, "https://example.com", "LinkedIn"));
@@ -98,8 +99,8 @@ class EndorsementLinkServiceTest {
     void updateEndorsementLinkTest() {
         Long userId = 1L;
 
-        BusinessProfile businessProfile = new BusinessProfile();
-        when(businessProfileRepository.findByUserId(userId)).thenReturn(businessProfile);
+        Optional<Profile> businessProfile = Optional.of(new BusinessProfile());
+        when(businessProfileRepository.findById(userId)).thenReturn(businessProfile);
 
         EndorsementLink endorsementLink  = new EndorsementLink(userId, "https://example.com", "linkedin");
         endorsementLink.setId(1L);

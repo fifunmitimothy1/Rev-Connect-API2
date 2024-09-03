@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class UserController {
     
     private final UserService userService;
@@ -103,6 +103,7 @@ public class UserController {
         responseDTO.setLastName(user.getLastName());
         responseDTO.setFullName(user.getFirstName() + " " + user.getLastName());
         responseDTO.setIsBusiness(user.getIsBusiness());
+        responseDTO.setProfile(user.getProfile());
 
         return responseDTO;
     }

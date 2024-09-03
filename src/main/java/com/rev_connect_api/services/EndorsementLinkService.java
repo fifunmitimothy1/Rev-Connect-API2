@@ -2,11 +2,14 @@ package com.rev_connect_api.services;
 
 import java.util.List;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rev_connect_api.models.BusinessProfile;
+import com.rev_connect_api.models.Profile;
 import com.rev_connect_api.models.EndorsementLink;
+import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.repositories.BusinessProfileRepository;
 import com.rev_connect_api.repositories.EndorsementLinkRepository;
 
@@ -48,9 +51,9 @@ public class EndorsementLinkService {
      * @param businessUserId The user id of the user to check
      */
     private void userExists(Long businessUserId){
-        BusinessProfile businessProfile = businessProfileRepository.findByUserId(businessUserId);
+        Optional<Profile> businessProfile = businessProfileRepository.findById(businessUserId);
 
-        if (businessProfile == null) {
+        if (businessProfile.isEmpty()) {
             throw new IllegalArgumentException("User does not have a business profile: " + businessUserId);
         }
     }

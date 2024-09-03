@@ -5,19 +5,8 @@ import org.hibernate.validator.constraints.URL;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "businessprofile")
-public class BusinessProfile {
-    
-    @Column(name = "profile_id")
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    @Column(name = "bio_text", columnDefinition = "VARCHAR(MAX)")
-    private String bioText;
+@DiscriminatorValue(value = "business")
+public class BusinessProfile extends Profile{
 
     @Column(name = "theme", columnDefinition = "VARCHAR(255)")
     private String theme;
@@ -30,60 +19,27 @@ public class BusinessProfile {
     @URL(message = "Invalid URL format for Banner")
     private String bannerURL;
 
+    @Column(name = "display_name", columnDefinition = "VARCHAR(255)")
+    private String displayName;
 
-    /**
-     * Basic No Args Constructor
-     */
     public BusinessProfile() {
+
     }
 
     /**
-     * Basic No Id Constructor
+     * No Id Constructor
      */
-    public BusinessProfile(User user, String bioText, String theme, String profilePictureURL, String bannerURL) {
-        this.user = user;
-        this.bioText = bioText;
-        this.theme = theme;
-        this.profilePictureURL = profilePictureURL;
-        this.bannerURL = bannerURL;
-    }
-
-    /**
-     * Basic All Args Constructor
-     */
-    public BusinessProfile(long id, User user, String bioText, String theme, String profilePictureURL, String bannerURL) {
-        this.id = id;
-        this.user = user;
-        this.bioText = bioText;
-        this.theme = theme;
-        this.profilePictureURL = profilePictureURL;
-        this.bannerURL = bannerURL;
-    }
-
-
-    // Generated Getters and Setters
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getBioText() {
-        return bioText;
-    }
-
-    public void setBioText(String bioText) {
-        this.bioText = bioText;
+    public BusinessProfile(
+        String bio, 
+        String theme,
+        @URL(message = "Invalid URL format for Profile Picture") String profilePictureURL,
+        @URL(message = "Invalid URL format for Banner") String bannerURL, 
+        String displayName) {
+            super(bio);
+            this.theme = theme;
+            this.profilePictureURL = profilePictureURL;
+            this.bannerURL = bannerURL;
+            this.displayName = displayName;
     }
 
     public String getTheme() {
@@ -110,18 +66,12 @@ public class BusinessProfile {
         this.bannerURL = bannerURL;
     }
 
-    // Generated
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
-        result = prime * result + ((bioText == null) ? 0 : bioText.hashCode());
-        result = prime * result + ((theme == null) ? 0 : theme.hashCode());
-        result = prime * result + ((profilePictureURL == null) ? 0 : profilePictureURL.hashCode());
-        result = prime * result + ((bannerURL == null) ? 0 : bannerURL.hashCode());
-        return result;
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     // Generated
@@ -129,23 +79,11 @@ public class BusinessProfile {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
         BusinessProfile other = (BusinessProfile) obj;
-        if (id != other.id)
-            return false;
-        if (user == null) {
-            if (other.user != null)
-                return false;
-        } else if (!user.equals(other.user))
-            return false;
-        if (bioText == null) {
-            if (other.bioText != null)
-                return false;
-        } else if (!bioText.equals(other.bioText))
-            return false;
         if (theme == null) {
             if (other.theme != null)
                 return false;
@@ -161,15 +99,32 @@ public class BusinessProfile {
                 return false;
         } else if (!bannerURL.equals(other.bannerURL))
             return false;
+        if (displayName == null) {
+            if (other.displayName != null)
+                return false;
+        } else if (!displayName.equals(other.displayName))
+            return false;
         return true;
     }
-    
+
     // Generated
     @Override
-    public String toString() {
-        return "BusinessProfile [id=" + id + ", user=" + user + ", bioText=" + bioText + ", theme=" + theme
-                + ", profilePictureURL=" + profilePictureURL + ", bannerURL=" + bannerURL + "]";
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((theme == null) ? 0 : theme.hashCode());
+        result = prime * result + ((profilePictureURL == null) ? 0 : profilePictureURL.hashCode());
+        result = prime * result + ((bannerURL == null) ? 0 : bannerURL.hashCode());
+        result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
+        return result;
     }
-   
+
+    @Override
+    public String toString() {
+        return "BusinessProfile [theme=" + theme + ", profilePictureURL=" + profilePictureURL + ", bannerURL="
+                + bannerURL + ", displayName=" + displayName + "]";
+    }
+    
+    
 
 }
