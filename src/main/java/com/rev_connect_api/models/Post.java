@@ -5,81 +5,68 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 @Entity
 @Table(name = "posts")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private BigInteger postId;
-    private BigInteger userId;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq")
+    @SequenceGenerator(name = "post_seq", sequenceName = "post_sequence", allocationSize = 1)
+    @Column(name = "post_id")
+    private Long postId;
+
+    @Column(name ="author_id", nullable = false)
+    private Long authorId;
+
+    @Column(name = "title", nullable = false)
     private String title;
+    
+    @Column(name = "content", nullable = false)
     private String content;
 
-    private Post(Builder builder) {
-        postId = builder.postId;
-        userId = builder.userId;
-        createdAt = builder.createdAt;
-        updatedAt = builder.updatedAt;
-        title = builder.title;
-        content = builder.content;
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "post_tags",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "tagged_users",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> taggedUsers = new HashSet<>();
+
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static final class Builder {
-        private BigInteger postId;
-        private BigInteger userId;
-        private Timestamp createdAt;
-        private Timestamp updatedAt;
-        private String title;
-        private String content;
-
-        private Builder() {
-        }
-
-        public Builder postId(BigInteger val) {
-            postId = val;
-            return this;
-        }
-
-        public Builder userId(BigInteger val) {
-            userId = val;
-            return this;
-        }
-
-        public Builder createdAt(Timestamp val) {
-            createdAt = val;
-            return this;
-        }
-
-        public Builder updatedAt(Timestamp val) {
-            updatedAt = val;
-            return this;
-        }
-
-        public Builder title(String val) {
-            title = val;
-            return this;
-        }
-
-        public Builder content(String val) {
-            content = val;
-            return this;
-        }
-
-        public Post build() {
-            return new Post(this);
-        }
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rev_connect_api.dto.LoginRequestDTO;
+import com.rev_connect_api.dto.LoginResponseDTO;
 import com.rev_connect_api.security.JWTAuthenticationFilter;
 import com.rev_connect_api.services.AuthService;
 
@@ -17,7 +18,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private final AuthService authService;
@@ -28,12 +28,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String,String>> login(@RequestBody @Valid LoginRequestDTO loginDTO) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO loginDTO) {
             logger.info("\n\nThis is the login in response: {}\n\n", loginDTO.toString());
             // authenticate the user and generate a jwt token
-            String jwtToken = authService.loginUser(loginDTO);
-            Map<String, String> response = new HashMap<>();
-            response.put("token", jwtToken);
+            LoginResponseDTO response = authService.loginUser(loginDTO);
             logger.info("\n\n response : {}\n\n", response);
             return ResponseEntity.ok(response);
     }
