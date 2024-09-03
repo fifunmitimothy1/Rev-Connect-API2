@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class CommentControllerTest {
 
     @InjectMocks
-    public CommentController commentController;
+    private CommentController commentController;
 
     @Mock
     private CommentService commentService;
@@ -50,11 +51,12 @@ public class CommentControllerTest {
         Comment comment2 = new Comment();
         comment2.setCommentId(2L);
 
-        when(commentService.getCommentForPost(userId, postId)).thenReturn(Arrays.asList(comment1, comment2));
-        when(commentService.getLikesCountForComment(1L)).thenReturn(10L);
-        when(commentService.getLikesCountForComment(2L)).thenReturn(5L);
+        CommentResponse response1 = new CommentResponse(comment1, 10L);
+        CommentResponse response2 = new CommentResponse(comment2, 5L);
 
-        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId,userId);
+        when(commentService.getCommentsForPost(userId, postId)).thenReturn(Arrays.asList(response1, response2));
+
+        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId, userId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<CommentResponse> body = response.getBody();
@@ -62,9 +64,8 @@ public class CommentControllerTest {
         assertEquals(2, body.size());
         assertEquals(10L, body.get(0).getLikesCount());
         assertEquals(5L, body.get(1).getLikesCount());
-        verify(commentService).getCommentForPost(userId, postId);
-        verify(commentService).getLikesCountForComment(1L);
-        verify(commentService).getLikesCountForComment(2L);
+
+        verify(commentService).getCommentsForPost(userId, postId);
     }
 
     /**
@@ -79,22 +80,22 @@ public class CommentControllerTest {
         long userId = 1L;
         long postId = 2L;
 
-        when(commentService.getCommentForPost(userId, postId)).thenReturn(Collections.emptyList());
+        when(commentService.getCommentsForPost(userId, postId)).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId,userId);
+        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId, userId);
 
         List<CommentResponse> body = response.getBody();
         assert body != null;
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, body.size());
 
-        verify(commentService).getCommentForPost(userId, postId);
+        verify(commentService).getCommentsForPost(userId, postId);
     }
 
     /**
      * Tests the createComment method when creating a comment succeeds.
      * This test verifies that:
-     * - The HTTP status is OK (200).
+     * - The HTTP status is CREATED (201).
      * - The response body contains the created comment.
      * - The correct service method is called.
      */
@@ -120,7 +121,7 @@ public class CommentControllerTest {
      * - The correct service method is called.
      */
     @Test
-    public void testCreateCommentForComment_ThrowsException() {
+    public void testCreateCommentForPost_ThrowsException() {
         Comment comment = new Comment();
 
         when(commentService.createComment(comment)).thenThrow(new RuntimeException());

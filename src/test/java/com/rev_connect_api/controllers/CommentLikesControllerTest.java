@@ -16,12 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for the CommentLikesController class.
- *
- * This class contains tests to verify the behavior of the likeComment method
- * in different scenarios, using Mockito for mocking dependencies and JUnit for assertions.
- */
 @ExtendWith(SpringExtension.class)
 public class CommentLikesControllerTest {
 
@@ -34,27 +28,17 @@ public class CommentLikesControllerTest {
     @Mock
     private CommentLikesService commentLikesService; // Mocks the CommentLikesService dependency
 
-    /**
-     * Tests the likeComment method when the comment exists and the like operation succeeds.
-     *
-     * This test verifies that:
-     * - The HTTP status is OK (200).
-     * - The response body contains the expected Comment and the like count.
-     * - The correct service methods are called.
-     */
     @Test
-    public void testLikesComment_Success() {
+    public void testLikeComment_Success() {
         long userId = 1L;
         long commentId = 2L;
 
-        Comment comment1 = new Comment();
-        comment1.setCommentId(1L);
-        Comment comment2 = new Comment();
-        comment2.setCommentId(2L);
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
 
         when(commentService.doesCommentExist(commentId)).thenReturn(true);
-        when(commentService.getCommentById(commentId)).thenReturn(comment2);
-        when(commentLikesService.countLikesForComment(commentId)).thenReturn(0L);
+        when(commentService.getCommentById(commentId)).thenReturn(comment);
+        when(commentLikesService.countLikesForComment(commentId)).thenReturn(5L); // Assume 5 likes for testing
 
         ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
 
@@ -62,34 +46,53 @@ public class CommentLikesControllerTest {
         CommentResponse commentResponse = response.getBody();
 
         assert commentResponse != null;
-        assertEquals(comment2, commentResponse.getComment());
-        assertEquals(0L, commentResponse.getLikesCount());
+        assertEquals(comment, commentResponse.getComment());
+        assertEquals(5L, commentResponse.getLikesCount());
 
         verify(commentService).doesCommentExist(commentId);
         verify(commentService).getCommentById(commentId);
         verify(commentLikesService).countLikesForComment(commentId);
     }
 
-    /**
-     * Tests the likeComment method when the comment does not exist.
-     *
-     * This test verifies that:
-     * - The HTTP status is NOT FOUND (404).
-     * - No interactions with the CommentLikesService occur if the comment is not found.
-     */
     @Test
-    public void testLikesComment_Failure() {
+    public void testLikeComment_CommentDoesNotExist() {
         long userId = 1L;
         long commentId = 2L;
 
-
+        // Mock the scenario where the comment does not exist
         when(commentService.doesCommentExist(commentId)).thenReturn(false);
 
+        // Call the controller method
         ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
 
+        // Verify the response
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
+        // Verify that the CommentService method was called with the correct parameters
         verify(commentService).doesCommentExist(commentId);
+
+        // Verify no interactions with CommentLikesService as the comment does not exist
+        verifyNoInteractions(commentLikesService);
+    }
+
+    @Test
+    public void testLikeComment_UnexpectedException() {
+        long userId = 1L;
+        long commentId = 2L;
+
+        // Mock the scenario where an unexpected exception is thrown
+        when(commentService.doesCommentExist(commentId)).thenThrow(new RuntimeException("Unexpected error"));
+
+        // Call the controller method
+        ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
+
+        // Verify the response
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+
+        // Verify that the CommentService method was called with the correct parameters
+        verify(commentService).doesCommentExist(commentId);
+
+        // Verify that no interactions with CommentLikesService occur if an unexpected error happens
         verifyNoInteractions(commentLikesService);
     }
 }

@@ -1,13 +1,20 @@
 package com.rev_connect_api.services;
 
+import com.rev_connect_api.dto.CommentResponse;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.repositories.CommentLikesRepository;
 import com.rev_connect_api.repositories.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,8 +55,24 @@ public class CommentService {
    * @param postId The ID of the post for which comments are to be retrieved.
    * @return A list of comments made by the user on the specified post.
    */
-  public List<Comment> getCommentForPost(long userId, long postId) {
-    return commentRepository.findByUserIdAndPostId(userId, postId);
+  public List<CommentResponse> getCommentsForPost(Long userId, long postId) {
+
+        List<Comment> commentsForPost;
+        // Fetch comments based on presence of userId
+        if (userId != null ) {
+          commentsForPost = commentRepository.findByUserIdAndPostId(userId, postId);
+        } else {
+          commentsForPost = commentRepository.findByPostId(postId);
+        }
+        // Prepare CommentResponse objects with likes count
+        List<CommentResponse> responses = new ArrayList<>();
+        for (Comment comment : commentsForPost) {
+          long likesCount = commentLikesRepository.countByCommentId(comment.getCommentId());
+          responses.add(new CommentResponse(comment, likesCount));
+        }
+
+
+    return responses;
   }
 
   /**

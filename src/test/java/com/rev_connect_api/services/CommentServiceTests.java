@@ -1,5 +1,6 @@
 package com.rev_connect_api.services;
 
+import com.rev_connect_api.dto.CommentResponse;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.repositories.CommentLikesRepository;
 import com.rev_connect_api.repositories.CommentRepository;
@@ -12,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,24 +59,71 @@ public class CommentServiceTests {
     }
 
     @Test
-    public void testGetCommentForPost() {
+    public void testGetCommentsForPost_WithUserId() {
         long userId = 1L;
         long postId = 1L;
 
         Comment comment1 = new Comment();
-        Comment comment2 = new Comment();
         comment1.setCommentId(1L);
+        Comment comment2 = new Comment();
         comment2.setCommentId(2L);
 
-        when(commentRepository.findByUserIdAndPostId(userId, postId)).thenReturn(Arrays.asList(comment1, comment2));
+        CommentResponse response1 = new CommentResponse(comment1, 10L);
+        CommentResponse response2 = new CommentResponse(comment2, 5L);
 
-        List<Comment> comments = commentService.getCommentForPost(userId, postId);
+        when(commentRepository.findByUserIdAndPostId(userId, postId)).thenReturn(Arrays.asList(comment1, comment2));
+        when(commentLikesRepository.countByCommentId(1L)).thenReturn(10L);
+        when(commentLikesRepository.countByCommentId(2L)).thenReturn(5L);
+
+        List<CommentResponse> comments = commentService.getCommentsForPost(userId, postId);
 
         assertEquals(2, comments.size());
-        assertEquals(1L, comments.get(0).getCommentId());
-        assertEquals(2L, comments.get(1).getCommentId());
+        assertEquals(10L, comments.get(0).getLikesCount());
+        assertEquals(5L, comments.get(1).getLikesCount());
 
         verify(commentRepository, times(1)).findByUserIdAndPostId(userId, postId);
+        verify(commentLikesRepository, times(1)).countByCommentId(1L);
+        verify(commentLikesRepository, times(1)).countByCommentId(2L);
+    }
+
+    @Test
+    public void testGetCommentsForPost_WithoutUserId() {
+        long postId = 1L;
+
+        Comment comment1 = new Comment();
+        comment1.setCommentId(1L);
+        Comment comment2 = new Comment();
+        comment2.setCommentId(2L);
+
+        CommentResponse response1 = new CommentResponse(comment1, 10L);
+        CommentResponse response2 = new CommentResponse(comment2, 5L);
+
+        when(commentRepository.findByPostId(postId)).thenReturn(Arrays.asList(comment1, comment2));
+        when(commentLikesRepository.countByCommentId(1L)).thenReturn(10L);
+        when(commentLikesRepository.countByCommentId(2L)).thenReturn(5L);
+
+        List<CommentResponse> comments = commentService.getCommentsForPost(null, postId);
+
+        assertEquals(2, comments.size());
+        assertEquals(10L, comments.get(0).getLikesCount());
+        assertEquals(5L, comments.get(1).getLikesCount());
+
+        verify(commentRepository, times(1)).findByPostId(postId);
+        verify(commentLikesRepository, times(1)).countByCommentId(1L);
+        verify(commentLikesRepository, times(1)).countByCommentId(2L);
+    }
+
+    @Test
+    public void testGetCommentsForPost_NoComments() {
+        long postId = 1L;
+
+        when(commentRepository.findByPostId(postId)).thenReturn(Collections.emptyList());
+
+        List<CommentResponse> comments = commentService.getCommentsForPost(null, postId);
+
+        assertTrue(comments.isEmpty());
+
+        verify(commentRepository, times(1)).findByPostId(postId);
     }
 
     @Test
@@ -140,8 +189,8 @@ public class CommentServiceTests {
         long postId = 1L;
 
         Comment comment1 = new Comment();
-        Comment comment2 = new Comment();
         comment1.setCommentId(1L);
+        Comment comment2 = new Comment();
         comment2.setCommentId(2L);
 
         when(commentRepository.findByPostId(postId)).thenReturn(Arrays.asList(comment1, comment2));

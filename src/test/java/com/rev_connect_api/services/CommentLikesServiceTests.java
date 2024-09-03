@@ -76,4 +76,3 @@ public class CommentLikesServiceTests {
         verify(commentLikesRepository, times(1)).countByCommentId(commentId);
     }
 }
-

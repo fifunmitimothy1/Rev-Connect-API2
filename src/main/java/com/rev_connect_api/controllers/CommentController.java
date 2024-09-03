@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/posts")
 @CrossOrigin(origins = "*") // Apply CORS configuration at the class level
 public class CommentController {
 
@@ -33,33 +33,51 @@ public class CommentController {
      * @param userId Optional query parameter to filter comments by user ID.
      * @return A ResponseEntity containing a list of CommentResponse objects and HTTP status.
      */
+//    @GetMapping("/{postId}/comment")
+//    public ResponseEntity<List<CommentResponse>> getCommentsForPost(
+//            @PathVariable long postId,
+//            @RequestParam(required = false) Long userId // Optional query parameter
+//    ) {
+//        try {
+//            List<Comment> commentsForPost;
+//            // Fetch comments based on presence of userId
+//            if (userId != null) {
+//                commentsForPost = commentService.getCommentForPost(userId, postId);
+//            } else {
+//                commentsForPost = commentService.getAllCommentsByPostId(postId);
+//            }
+//            // Prepare CommentResponse objects with likes count
+//            List<CommentResponse> responses = new ArrayList<>();
+//            for (Comment comment : commentsForPost) {
+//                long likesCount = commentService.getLikesCountForComment(comment.getCommentId());
+//                responses.add(new CommentResponse(comment, likesCount));
+//            }
+//            // Return comments with HTTP status OK
+//            return new ResponseEntity<>(responses, HttpStatus.OK);
+//        } catch (Exception e) {
+//            // Log error and return internal server error status
+//            logger.error("An error occurred while fetching comments for post {}", postId, e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
     @GetMapping("/{postId}/comment")
     public ResponseEntity<List<CommentResponse>> getCommentsForPost(
             @PathVariable long postId,
             @RequestParam(required = false) Long userId // Optional query parameter
     ) {
         try {
-            List<Comment> commentsForPost;
-            // Fetch comments based on presence of userId
-            if (userId != null) {
-                commentsForPost = commentService.getCommentForPost(userId, postId);
-            } else {
-                commentsForPost = commentService.getAllCommentsByPostId(postId);
-            }
-            // Prepare CommentResponse objects with likes count
-            List<CommentResponse> responses = new ArrayList<>();
-            for (Comment comment : commentsForPost) {
-                long likesCount = commentService.getLikesCountForComment(comment.getCommentId());
-                responses.add(new CommentResponse(comment, likesCount));
-            }
+            // Delegate the logic to the service layer
+            List<CommentResponse> responses = commentService.getCommentsForPost(userId, postId);
+
             // Return comments with HTTP status OK
-            return new ResponseEntity<>(responses, HttpStatus.OK);
+            return ResponseEntity.ok(responses);
         } catch (Exception e) {
             // Log error and return internal server error status
             logger.error("An error occurred while fetching comments for post {}", postId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     /**
      * Creates a new comment.
