@@ -1,6 +1,6 @@
 package com.rev_connect_api.controllers;
 
-import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.dto.CommentResponseDTO;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.services.CommentService;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ public class CommentControllerTest {
      * Tests the getCommentsForPost method when there are comments for a post.
      * This test verifies that:
      * - The HTTP status is OK (200).
-     * - The response body contains the expected list of CommentResponse objects.
+     * - The response body contains the expected list of CommentResponseDTO objects.
      * - The like counts for each comment are as expected.
      * - The correct service methods are called.
      */
@@ -51,15 +51,15 @@ public class CommentControllerTest {
         Comment comment2 = new Comment();
         comment2.setCommentId(2L);
 
-        CommentResponse response1 = new CommentResponse(comment1, 10L);
-        CommentResponse response2 = new CommentResponse(comment2, 5L);
+        CommentResponseDTO response1 = new CommentResponseDTO(comment1, 10L);
+        CommentResponseDTO response2 = new CommentResponseDTO(comment2, 5L);
 
         when(commentService.getCommentsForPost(userId, postId)).thenReturn(Arrays.asList(response1, response2));
 
-        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId, userId);
+        ResponseEntity<List<CommentResponseDTO>> response = commentController.getCommentsForPost(postId, userId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<CommentResponse> body = response.getBody();
+        List<CommentResponseDTO> body = response.getBody();
         assert body != null;
         assertEquals(2, body.size());
         assertEquals(10L, body.get(0).getLikesCount());
@@ -82,9 +82,9 @@ public class CommentControllerTest {
 
         when(commentService.getCommentsForPost(userId, postId)).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<CommentResponse>> response = commentController.getCommentsForPost(postId, userId);
+        ResponseEntity<List<CommentResponseDTO>> response = commentController.getCommentsForPost(postId, userId);
 
-        List<CommentResponse> body = response.getBody();
+        List<CommentResponseDTO> body = response.getBody();
         assert body != null;
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, body.size());

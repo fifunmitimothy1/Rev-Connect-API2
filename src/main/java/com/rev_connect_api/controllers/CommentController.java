@@ -1,6 +1,6 @@
 package com.rev_connect_api.controllers;
 
-import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.dto.CommentResponseDTO;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.services.CommentService;
 import org.slf4j.Logger;
@@ -61,13 +61,13 @@ public class CommentController {
 //        }
 //    }
     @GetMapping("/{postId}/comment")
-    public ResponseEntity<List<CommentResponse>> getCommentsForPost(
+    public ResponseEntity<List<CommentResponseDTO>> getCommentsForPost(
             @PathVariable long postId,
             @RequestParam(required = false) Long userId // Optional query parameter
     ) {
         try {
             // Delegate the logic to the service layer
-            List<CommentResponse> responses = commentService.getCommentsForPost(userId, postId);
+            List<CommentResponseDTO> responses = commentService.getCommentsForPost(userId, postId);
 
             // Return comments with HTTP status OK
             return ResponseEntity.ok(responses);

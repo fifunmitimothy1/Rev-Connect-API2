@@ -2,11 +2,11 @@ package com.rev_connect_api.dto;
 
 import com.rev_connect_api.models.Comment;
 
-public class CommentResponse {
+public class CommentResponseDTO {
     private Comment comment;
     private long likesCount;
 
-    public CommentResponse(Comment comment, long likesCount) {
+    public CommentResponseDTO(Comment comment, long likesCount) {
         this.comment = comment;
         this.likesCount = likesCount;
     }

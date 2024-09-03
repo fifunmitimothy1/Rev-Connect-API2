@@ -1,6 +1,6 @@
 package com.rev_connect_api.services;
 
-import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.dto.CommentResponseDTO;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.repositories.CommentLikesRepository;
 import com.rev_connect_api.repositories.CommentRepository;
@@ -55,7 +55,7 @@ public class CommentService {
    * @param postId The ID of the post for which comments are to be retrieved.
    * @return A list of comments made by the user on the specified post.
    */
-  public List<CommentResponse> getCommentsForPost(Long userId, long postId) {
+  public List<CommentResponseDTO> getCommentsForPost(Long userId, long postId) {
 
         List<Comment> commentsForPost;
         // Fetch comments based on presence of userId
@@ -65,10 +65,10 @@ public class CommentService {
           commentsForPost = commentRepository.findByPostId(postId);
         }
         // Prepare CommentResponse objects with likes count
-        List<CommentResponse> responses = new ArrayList<>();
+        List<CommentResponseDTO> responses = new ArrayList<>();
         for (Comment comment : commentsForPost) {
           long likesCount = commentLikesRepository.countByCommentId(comment.getCommentId());
-          responses.add(new CommentResponse(comment, likesCount));
+          responses.add(new CommentResponseDTO(comment, likesCount));
         }
 
 

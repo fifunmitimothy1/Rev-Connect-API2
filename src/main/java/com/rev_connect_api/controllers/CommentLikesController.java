@@ -1,6 +1,6 @@
 package com.rev_connect_api.controllers;
 
-import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.dto.CommentResponseDTO;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.services.CommentLikesService;
 import com.rev_connect_api.services.CommentService;
@@ -23,11 +23,11 @@ public class CommentLikesController {
      * Handles the process of liking a comment.
      * @param userId The ID of the user who is liking the comment.
      * @param commentId The ID of the comment being liked.
-     * @return A ResponseEntity containing the updated CommentResponse object and HTTP status.
+     * @return A ResponseEntity containing the updated CommentResponseDTO object and HTTP status.
      */
     @PutMapping("/comment/{commentId}/like")
     @CrossOrigin(origins = "*") // Enable CORS for this endpoint
-    public ResponseEntity<CommentResponse> likeComment(@RequestParam long userId, @PathVariable long commentId) {
+    public ResponseEntity<CommentResponseDTO> likeComment(@RequestParam long userId, @PathVariable long commentId) {
         try {
             // Check if the comment exists
             if (commentService.doesCommentExist(commentId)) {
@@ -38,8 +38,8 @@ public class CommentLikesController {
                 Comment updatedComment = commentService.getCommentById(commentId);
                 long likesCount = commentLikesService.countLikesForComment(commentId);
 
-                // Create a CommentResponse object to return
-                CommentResponse commentResponse = new CommentResponse(updatedComment, likesCount);
+                // Create a CommentResponseDTO object to return
+                CommentResponseDTO commentResponse = new CommentResponseDTO(updatedComment, likesCount);
 
                 // Return the updated comment with HTTP status OK
                 return new ResponseEntity<>(commentResponse, HttpStatus.OK);

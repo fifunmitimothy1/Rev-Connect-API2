@@ -1,6 +1,6 @@
 package com.rev_connect_api.controllers;
 
-import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.dto.CommentResponseDTO;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.services.CommentLikesService;
 import com.rev_connect_api.services.CommentService;
@@ -40,10 +40,10 @@ public class CommentLikesControllerTest {
         when(commentService.getCommentById(commentId)).thenReturn(comment);
         when(commentLikesService.countLikesForComment(commentId)).thenReturn(5L); // Assume 5 likes for testing
 
-        ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
+        ResponseEntity<CommentResponseDTO> response = commentLikesController.likeComment(userId, commentId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        CommentResponse commentResponse = response.getBody();
+        CommentResponseDTO commentResponse = response.getBody();
 
         assert commentResponse != null;
         assertEquals(comment, commentResponse.getComment());
@@ -63,7 +63,7 @@ public class CommentLikesControllerTest {
         when(commentService.doesCommentExist(commentId)).thenReturn(false);
 
         // Call the controller method
-        ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
+        ResponseEntity<CommentResponseDTO> response = commentLikesController.likeComment(userId, commentId);
 
         // Verify the response
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -84,7 +84,7 @@ public class CommentLikesControllerTest {
         when(commentService.doesCommentExist(commentId)).thenThrow(new RuntimeException("Unexpected error"));
 
         // Call the controller method
-        ResponseEntity<CommentResponse> response = commentLikesController.likeComment(userId, commentId);
+        ResponseEntity<CommentResponseDTO> response = commentLikesController.likeComment(userId, commentId);
 
         // Verify the response
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

@@ -1,6 +1,6 @@
 package com.rev_connect_api.services;
 
-import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.dto.CommentResponseDTO;
 import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.repositories.CommentLikesRepository;
 import com.rev_connect_api.repositories.CommentRepository;
@@ -68,14 +68,14 @@ public class CommentServiceTests {
         Comment comment2 = new Comment();
         comment2.setCommentId(2L);
 
-        CommentResponse response1 = new CommentResponse(comment1, 10L);
-        CommentResponse response2 = new CommentResponse(comment2, 5L);
+        CommentResponseDTO response1 = new CommentResponseDTO(comment1, 10L);
+        CommentResponseDTO response2 = new CommentResponseDTO(comment2, 5L);
 
         when(commentRepository.findByUserIdAndPostId(userId, postId)).thenReturn(Arrays.asList(comment1, comment2));
         when(commentLikesRepository.countByCommentId(1L)).thenReturn(10L);
         when(commentLikesRepository.countByCommentId(2L)).thenReturn(5L);
 
-        List<CommentResponse> comments = commentService.getCommentsForPost(userId, postId);
+        List<CommentResponseDTO> comments = commentService.getCommentsForPost(userId, postId);
 
         assertEquals(2, comments.size());
         assertEquals(10L, comments.get(0).getLikesCount());
@@ -95,14 +95,14 @@ public class CommentServiceTests {
         Comment comment2 = new Comment();
         comment2.setCommentId(2L);
 
-        CommentResponse response1 = new CommentResponse(comment1, 10L);
-        CommentResponse response2 = new CommentResponse(comment2, 5L);
+        CommentResponseDTO response1 = new CommentResponseDTO(comment1, 10L);
+        CommentResponseDTO response2 = new CommentResponseDTO(comment2, 5L);
 
         when(commentRepository.findByPostId(postId)).thenReturn(Arrays.asList(comment1, comment2));
         when(commentLikesRepository.countByCommentId(1L)).thenReturn(10L);
         when(commentLikesRepository.countByCommentId(2L)).thenReturn(5L);
 
-        List<CommentResponse> comments = commentService.getCommentsForPost(null, postId);
+        List<CommentResponseDTO> comments = commentService.getCommentsForPost(null, postId);
 
         assertEquals(2, comments.size());
         assertEquals(10L, comments.get(0).getLikesCount());
@@ -119,7 +119,7 @@ public class CommentServiceTests {
 
         when(commentRepository.findByPostId(postId)).thenReturn(Collections.emptyList());
 
-        List<CommentResponse> comments = commentService.getCommentsForPost(null, postId);
+        List<CommentResponseDTO> comments = commentService.getCommentsForPost(null, postId);
 
         assertTrue(comments.isEmpty());
 
