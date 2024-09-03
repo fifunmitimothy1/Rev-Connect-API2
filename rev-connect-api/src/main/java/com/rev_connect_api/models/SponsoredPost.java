@@ -8,17 +8,15 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("2")
 public class SponsoredPost extends Post{
     private String sponsor;
-    private List<String> tags;
+    //private List<String> tags;
 
-    public SponsoredPost() {
-        sponsor = "";
-        tags = new ArrayList<>();
-    }
+    public SponsoredPost() {}
 
     public void setSponsor(String sponsor) {
         this.sponsor = sponsor;
     }
 
+    /*
     public void addTag(String tag) {
         tags.add(tag);
     }
@@ -26,14 +24,17 @@ public class SponsoredPost extends Post{
     public void removeTag(String tag) {
         tags.remove(tag);
     }
-
+    */
+    
     public String getSponsor() {
         return sponsor;
     }
 
+    /*
     public List<String> getTags() {
         return new ArrayList<>(tags);
     }
+    */
 
     private SponsoredPost(Builder builder) {
         super(builder);
@@ -48,7 +49,6 @@ public class SponsoredPost extends Post{
         private String sponsor;
 
         public Builder() {
-            System.out.println("spp");
         }
 
         public Builder sponsor(String val) {
