@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.Profiles;
 import org.springframework.data.util.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,16 +37,14 @@ public class UserService {
     private final EmailService emailService;
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long EXPIRE_TOKEN = 15; // Expiration time in minutes
-    private final PersonalProfileService personalProfileService;
-    private final BusinessProfileService businessProfileService;
+    private final ProfileService profileService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, PersonalProfileService personalProfileService, BusinessProfileService businessProfileService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, ProfileService profileService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.personalProfileService = personalProfileService;
-        this.businessProfileService = businessProfileService;
+        this.profileService = profileService;
     }
 
     // Find a user by username
@@ -90,11 +89,7 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        if(user.getIsBusiness()) {
-            user.setProfile(businessProfileService.createBusinessProfile());
-        } else {
-            user.setProfile(personalProfileService.createProfile());
-        }
+        user.setProfile(profileService.createProfile(user.getIsBusiness()));
 
         return userRepository.saveAndFlush(user);
     }
