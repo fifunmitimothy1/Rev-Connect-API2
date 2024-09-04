@@ -1,8 +1,10 @@
 drop table if exists user_roles;
-drop table if exists posts;
 drop table if exists users cascade;
-drop table if exists connections;
 drop table if exists personal_profiles;
+drop table if exists posts cascade;
+drop table if exists tags cascade;
+drop table if exists post_tags cascade;
+drop table if exists tagged_users cascade;
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -30,24 +32,37 @@ CREATE TABLE personal_profiles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE connections (
-    connection_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_A BIGINT,
-    user_B BIGINT,
-    FOREIGN KEY (user_A) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_B) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
 CREATE TABLE posts (
     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     author_id BIGINT NOT NULL,
     title VARCHAR(255) NOT NULL,
     content VARCHAR(255) NOT NULL,
-    is_private BOOLEAN NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE tags (
+    tag_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE post_tags (
+    post_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE
+);
+
+CREATE TABLE tagged_users (
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    PRIMARY KEY (post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 
 -- Insert users
 -- passwords are hashed from "hashed_password"
@@ -74,18 +89,33 @@ VALUES
 (3, 'TestBio3!'),
 (4, 'TestBio4!');
 
-INSERT INTO connections (user_A, user_B)
-VALUES
-(1, 2),
-(2, 1);
-
 -- Insert posts
-INSERT INTO posts (author_id, title, content, is_private, created_at, updated_at)
+INSERT INTO posts (author_id, title, content, created_at, updated_at)
 VALUES
-(1, 'testtitle1', 'This is the first test post.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'testtitle2', 'This is the second test post.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'testtitle3', 'Another post for testing.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'testtitle4', 'Yet another test post.', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO tags (tag_name)
+VALUES
+('Announcement'),
+('Personal'),
+('Private');
+
+
+INSERT INTO post_tags (post_id, tag_id)
+VALUES
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 3);
+
+INSERT INTO tagged_users (post_id, user_id)
+VALUES
+(1, 1),
+(1, 2);
 
 ALTER SEQUENCE user_sequence RESTART WITH 5;
 ALTER SEQUENCE post_sequence RESTART WITH 5;
+ALTER SEQUENCE tag_sequence RESTART WITH 4;

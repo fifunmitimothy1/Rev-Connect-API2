@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rev_connect_api.dto.LoginRequestDTO;
+import com.rev_connect_api.dto.LoginResponseDTO;
+import com.rev_connect_api.dto.UserResponseDTO;
+import com.rev_connect_api.mapper.UserMapper;
 import com.rev_connect_api.models.Role;
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.security.JwtUtil;
@@ -21,11 +24,13 @@ public class AuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     private final UserService userService;
+    private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     
-    public AuthService(UserService userService, BCryptPasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserService userService, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
@@ -33,10 +38,10 @@ public class AuthService {
     /**
      * 
      * @param loginRequestDTO The DTO containing the user's login credentials.
-     * @return A JWT token if authentication is successful.
+     * @return loginResponseDTO The DTO containing the response information.
      * @throws ResponseStatusException if the username or password is incorrect, 401 status.
      */
-    public String loginUser(LoginRequestDTO loginRequestDTO) {
+    public LoginResponseDTO loginUser(LoginRequestDTO loginRequestDTO) {
         logger.info("Attempting to authenticate user: {}", loginRequestDTO.getUsername());
         
         User user = userService.findUserByUsername(loginRequestDTO.getUsername());
@@ -46,8 +51,8 @@ public class AuthService {
             Set<String> roles = user.getRoles().stream()
                 .map(Role::name)
                 .collect(Collectors.toSet());
-                
-            return jwtUtil.generateToken(user.getUsername(), roles);
+            
+            return new LoginResponseDTO(userMapper.toDTO(user), jwtUtil.generateToken(user.getUsername(), roles));
         } else { 
             logger.info("Authentication failed for user: {}", loginRequestDTO.getUsername());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");

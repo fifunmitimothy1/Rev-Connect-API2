@@ -1,6 +1,7 @@
 package com.rev_connect_api.mapper;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

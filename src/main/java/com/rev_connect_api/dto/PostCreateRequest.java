@@ -15,6 +15,6 @@ public class PostCreateRequest {
     private String title;
     @NotEmpty(message = "content is blank")
     private String content;
-    @NotNull(message = "post privacy is required")
-    private Boolean isPrivate;
+    //@NotNull(message = "post privacy is required")
+    //private Boolean isPrivate;
 }

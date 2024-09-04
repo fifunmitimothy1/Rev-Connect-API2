@@ -1,11 +1,14 @@
 package com.rev_connect_api.models;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -31,8 +34,8 @@ public class Post {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "is_private", nullable = false)
-    private Boolean isPrivate;
+    @Column(name = "isPinned",nullable = false)
+    private Boolean isPinned;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -41,6 +44,25 @@ public class Post {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @LastModifiedDate
+    @Column(name = "pinned_at")
+    private LocalDateTime pinnedAt;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "post_tags",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "tagged_users",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> taggedUsers = new HashSet<>();
 
 
     @PrePersist
@@ -52,22 +74,5 @@ public class Post {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-  
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Post post = (Post) o;
-        return Objects.equals(postId, post.postId) &&
-            Objects.equals(authorId, post.authorId) &&
-            Objects.equals(title, post.title) &&
-            Objects.equals(content, post.content) &&
-            Objects.equals(isPrivate, post.isPrivate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(postId, authorId, title, content, isPrivate);
     }
 }
