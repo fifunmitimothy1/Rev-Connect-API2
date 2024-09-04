@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.rev_connect_api.exceptions.BioTextTooLongException;
 import com.rev_connect_api.exceptions.InvalidUserException;
@@ -16,6 +17,7 @@ import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.BusinessProfileRepository;
 import com.rev_connect_api.security.Principal;
 
+@Service
 public class ProfileService {
   private BusinessProfileService businessProfileService;
   private PersonalProfileService personalProfileService;
