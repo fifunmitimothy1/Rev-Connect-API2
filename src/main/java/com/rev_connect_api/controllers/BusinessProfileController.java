@@ -52,7 +52,7 @@ public class BusinessProfileController {
     * @param userId - Id of the user whose profile businessProfile is/user_id of the profile
     * @return The business profile that was persisted with code OK, or BAD_REQUEST error code.
     */
-    @PatchMapping("/{userId}")
+    @PutMapping("/{userId}")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Profile> updateBusinessProfile(
             @Valid

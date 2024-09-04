@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,7 +24,6 @@ import com.rev_connect_api.services.PersonalProfileService;
 import com.rev_connect_api.services.ProfileService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/profile")
 public class ProfileController {
   private ProfileService profileService;
@@ -45,7 +43,6 @@ public class ProfileController {
       return new ResponseEntity<> (HttpStatus.NOT_FOUND);
     }
   }
-
 
   @PutMapping("/{user_id}")
   public ResponseEntity<Object> updateProfile(@PathVariable Long user_id, @RequestBody PersonalProfile profile) {

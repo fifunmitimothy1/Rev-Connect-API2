@@ -48,5 +48,3 @@ VALUES
 INSERT INTO user_roles (user_id, role)
 VALUES
 (111, 'ROLE_USER');
-
-

@@ -1,8 +1,11 @@
 drop table if exists users cascade;
 drop table if exists user_roles;
 drop table if exists profiles;
+drop table if exists posts cascade;
+drop table if exists tags cascade;
+drop table if exists post_tags cascade;
+drop table if exists tagged_users cascade;
 
-drop table if exists post;
 
 CREATE TABLE profiles (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -13,6 +16,7 @@ CREATE TABLE profiles (
     banner_URL VARCHAR(255),
     display_name VARCHAR(255)
 );
+
 
 CREATE TABLE users (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -34,16 +38,37 @@ CREATE TABLE user_roles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+CREATE TABLE posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    author_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
 
+CREATE TABLE tags (
+    tag_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(50) NOT NULL UNIQUE
+);
 
--- -- CREATE TABLE post (
--- --     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
--- --     posted_by BIGINT,
--- --     post_text VARCHAR(255),
--- --     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
--- --     updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
--- --     FOREIGN KEY (posted_by) REFERENCES users(user_id)
--- -- );
+CREATE TABLE post_tags (
+    post_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE
+);
+
+CREATE TABLE tagged_users (
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    PRIMARY KEY (post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 
 INSERT INTO profiles VALUES (999, 'Test Bio 1', 'personal', null, null, null, null),
 (998, 'Test Bio 2', 'personal', null, null, null, null),
@@ -70,47 +95,20 @@ VALUES
 (113, 'ROLE_USER'),
 (114, 'ROLE_USER');
 
--- INSERT INTO personal_profiles (user_id, bio)
--- VALUES
--- (1, 'TestBio1!'),
--- (2, 'TestBio2!'),
--- (3, 'TestBio3!'),
--- (4, 'TestBio4!');
+-- Insert posts
+INSERT INTO posts (author_id, title, content, created_at, updated_at)
+VALUES
+(1, 'testtitle1', 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle2', 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'testtitle3', 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(1, 'testtitle4', 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- -- Insert posts
--- INSERT INTO post (posted_by, post_text, created_at, updated_at)
--- VALUES
--- (1, 'This is the first test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
--- (1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO tags (tag_name)
+VALUES
+('Announcement'),
+('Personal'),
+('Private');
 
-
--- DROP TABLE IF EXISTS businessprofile;
--- DROP TABLE IF EXISTS users;
-
--- CREATE TABLE businessprofile (
---     profile_id BIGINT PRIMARY KEY AUTO_INCREMENT,
---     user_id BIGINT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
---     bio_text VARCHAR(500),
---     theme VARCHAR(255),
---     pfp_URL VARCHAR(255),
---     banner_URL VARCHAR(255)
--- );
-
--- INSERT INTO users VALUES (111, 'test1', 'password1', 'joe1', 'doe1', 'test1@email', true);
--- INSERT INTO users VALUES (112, 'test2', 'password2', 'joe2', 'doe2', 'test2@email', true);
--- INSERT INTO users VALUES (113, 'test3', 'password3', 'joe3', 'doe3', 'test3@email', true);
--- INSERT INTO users VALUES (114, 'test4', 'password4', 'joe4', 'doe4', 'test4@email', false);
--- INSERT INTO users VALUES (115, 'test5', 'password5', 'joe5', 'doe5', 'test5@email', false);
--- INSERT INTO users VALUES (116, 'test6', 'password6', 'joe6', 'doe6', 'test6@email', false);
-
--- INSERT INTO businessprofile VALUES (999, 111, 'Test Bio 1', null, null, null);
--- INSERT INTO businessprofile VALUES (998, 112, 'Test Bio 2', null, null, null);
--- INSERT INTO businessprofile VALUES (997, 113, 'Test Bio 3', null, null, null);
--- INSERT INTO businessprofile VALUES (996, 114, 'Test Bio 4', null, null, null);
--- INSERT INTO businessprofile VALUES (995, 115, 'Test Bio 5', null, null, null);
--- INSERT INTO businessprofile VALUES (994, 116, 'Test Bio 6', null, null, null);
 
 -- DROP TABLE IF EXISTS endorsement_links;
 -- CREATE TABLE endorsement_links (
@@ -123,3 +121,20 @@ VALUES
 -- );
 
 -- INSERT INTO endorsement_links VALUES (1, 111, 'Https://www.blahblablah.com', 'test_link');
+
+INSERT INTO post_tags (post_id, tag_id)
+VALUES
+(1, 1),
+(1, 2),
+(2, 2),
+(3, 3);
+
+INSERT INTO tagged_users (post_id, user_id)
+VALUES
+(1, 1),
+(1, 2);
+
+ALTER SEQUENCE user_sequence RESTART WITH 5;
+ALTER SEQUENCE post_sequence RESTART WITH 5;
+ALTER SEQUENCE tag_sequence RESTART WITH 4;
+
