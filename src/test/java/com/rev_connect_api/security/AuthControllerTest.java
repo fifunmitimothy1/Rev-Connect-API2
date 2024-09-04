@@ -26,7 +26,9 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"testuser1\", \"password\":\"hashed_password\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty());
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.user").isNotEmpty())
+                .andExpect(jsonPath("$.user.username").value("testuser1"));
     }
 
     @Test
